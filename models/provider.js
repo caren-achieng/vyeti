@@ -35,11 +35,11 @@ const providerSchema = new mongoose.Schema(
     },
     physical_address: {
       type: String,
-      required: [true, "Please provide the organization's physical address"],
+      required: false,
     },
     country: {
       type: String,
-      required: [true, "Please select country"],
+      required: false,
     },
     profile_img: {
       type: String,
@@ -51,11 +51,11 @@ const providerSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      required: [true, "Please select one"],
+      required: [true, "Please select a Category"],
       enum: {
         values: [
           "Higher-Education",
-          "Proffessional-Assosiation",
+          "Professional-Assosiation",
           "Training-Provider",
           "Bootcamp",
           "Other",
@@ -64,6 +64,10 @@ const providerSchema = new mongoose.Schema(
       },
     },
     is_accredited: {
+      type: Boolean,
+      default: false,
+    },
+    is_verified: {
       type: Boolean,
       default: false,
     },
