@@ -2,61 +2,59 @@
 pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol"; 
 
-contract CredentialsRegistry is ReentrancyGuard {
+
+contract CredentialsRegistry is ERC721URIStorage {
     using Counters for Counters.Counter;
-    Counters.Counter private _credentialIds;
+    Counters.Counter private _tokenIds;
     Counters.Counter private _credentialsClaimed;
 
     address owner;
 
-    constructor(){
-       owner = msg.sender;
-    }
+    mapping(uint256 => Credential) private idToCredential;
 
     struct Credential {
-        uint credentialId;
-        address credentialContract;
         uint256 tokenId;
         address issuer;
         address owner;
         bool claimed;
     }
-
-    mapping(uint256 => Credential) private idToCredential;
    
     event CredentialCreated (
-        uint indexed credentialId,
-        address indexed credentialContract,
         uint256 indexed tokenId,
         address issuer,
         address owner,
         bool claimed
     );
 
-    function createCredential(
-        address credentialContract,
-        uint256 tokenId
-    ) public nonReentrant{
-        _credentialIds.increment();
-        uint256 credentialId = _credentialIds.current();
+    constructor() ERC721("Credential", "CRED"){
+       owner = payable(msg.sender);
+    }
 
-        idToCredential [credentialId] = Credential(
-            credentialId,
-            credentialContract,
+    function createCredentialToken(string memory tokenURI)public returns (uint){
+        _tokenIds.increment();
+        uint256 newTokenId = _tokenIds.current(); 
+        _mint(msg.sender,newTokenId);
+        _setTokenURI(newTokenId, tokenURI);
+        createCredential(newTokenId);
+        return newTokenId;
+    }
+    function createCredential(
+        uint256 tokenId
+    ) private{
+        idToCredential [tokenId] = Credential(
             tokenId,
             msg.sender,
             address(this),
             false
         );
 
-        IERC721(credentialContract).transferFrom(msg.sender, address(this), tokenId);
+        _transfer(msg.sender, address(this), tokenId);
         
         emit CredentialCreated(
-            credentialId,
-            credentialContract,
             tokenId,
             msg.sender,
             address(this),
@@ -65,25 +63,22 @@ contract CredentialsRegistry is ReentrancyGuard {
     }
 
     function claimCredential(
-        address credentialContract,
-        uint256 credentialId
-    ) public nonReentrant{
-        uint tokenId = idToCredential[credentialId].tokenId;
-
-        IERC721(credentialContract).transferFrom( address(this), msg.sender, tokenId); 
-        idToCredential[credentialId].owner =  msg.sender;
-        idToCredential[credentialId].claimed = true;
+        uint256 tokenId
+    ) public{
+        _transfer( address(this), msg.sender, tokenId); 
+        idToCredential[tokenId].owner =  msg.sender;
+        idToCredential[tokenId].claimed = true;
         _credentialsClaimed.increment();
     }
 
     function fetchAllCredentials() public view returns (Credential[] memory) {
-        uint credentialCount = _credentialIds.current();
+        uint credentialCount = _tokenIds.current();
         uint currentIndex = 0;
         
         Credential[] memory credentials = new Credential[](credentialCount);
 
         for (uint i = 0; i < credentialCount; i++) {
-            uint currentId = idToCredential[i+1].credentialId;
+            uint currentId = idToCredential[i+1].tokenId;
             Credential storage currentCredential = idToCredential[currentId];
             credentials[currentIndex] = currentCredential;
             currentIndex += 1;   
@@ -93,15 +88,15 @@ contract CredentialsRegistry is ReentrancyGuard {
     }
 
     function fetchUnclaimedCredentials() public view returns (Credential[] memory) {
-        uint credentialCount = _credentialIds.current();
-        uint unclaimedCredentialCount = _credentialIds.current() -_credentialsClaimed.current();
+        uint credentialCount = _tokenIds.current();
+        uint unclaimedCredentialCount = _tokenIds.current() -_credentialsClaimed.current();
         uint currentIndex = 0;
         
         Credential[] memory credentials = new Credential[](unclaimedCredentialCount);
 
         for (uint i = 0; i < credentialCount; i++) {
             if(idToCredential[i + 1].owner == address(this)){
-                uint currentId = idToCredential[i+1].credentialId;
+                uint currentId = idToCredential[i+1].tokenId;
                 Credential storage currentCredential = idToCredential[currentId];
                 credentials[currentIndex] = currentCredential;
                 currentIndex += 1;
@@ -112,7 +107,7 @@ contract CredentialsRegistry is ReentrancyGuard {
     }
 
     function fetchMyCredentials() public view returns (Credential[] memory) {
-        uint totalCredentialCount = _credentialIds.current();
+        uint totalCredentialCount = _tokenIds.current();
         uint myCredentialCount = 0;
         uint currentIndex = 0;
 
@@ -137,7 +132,7 @@ contract CredentialsRegistry is ReentrancyGuard {
     }
 
     function fetchIssuedCredentials() public view returns (Credential[] memory) {
-        uint totalCredentialCount = _credentialIds.current();
+        uint totalCredentialCount = _tokenIds.current();
         uint issuedCredentialCount = 0;
         uint currentIndex = 0;
 
@@ -168,7 +163,7 @@ contract CredentialsRegistry is ReentrancyGuard {
     }
 
     function fetchCredentialsByOwner(address ownerAddress) public view returns (Credential[] memory) {
-        uint totalCredentialCount = _credentialIds.current();
+        uint totalCredentialCount = _tokenIds.current();
         uint CredentialCount = 0;
         uint currentIndex = 0;
 

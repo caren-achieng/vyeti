@@ -19,9 +19,10 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
-import { credentialaddress, credentialsregistryaddress } from "../../config";
+import { credentialsRegistryAddress } from "../../config";
+import CredentialRegistry from "../../artifacts/contracts/CredentialsRegistry.sol/CredentialsRegistry.json";
 
-export default function Home() {
+export default function Issue() {
   const [fileUrl, setFileUrl] = useState(null);
   const [title, setTitle] = useState("");
   const [fullname, setFullName] = useState("");
@@ -99,14 +100,16 @@ export default function Home() {
     const signer = provider.getSigner();
 
     let contract = new ethers.Contract(
-      marketplaceAddress,
-      NFTMarketplace.abi,
+      credentialsRegistryAddress,
+      CredentialRegistry.abi,
       signer
     );
 
-    await transaction.wait();
+    let transaction = await contract.createCredentialToken(url);
+    let tx = await transaction.wait();
+    let event = tx.events[0];
 
-    router.push("/");
+    console.log("Success", event);
   }
 
   return (
@@ -127,7 +130,7 @@ export default function Home() {
         <Box sx={{ m: 4 }} />
         {activeStep === 0 ? (
           <Container>
-            <ImageUpload setFileUrl={setFileUrl} />
+            <ImageUpload setFileUrl={setFileUrl} fileUrl={fileUrl} />
             <CredentialForm
               title={title}
               fullname={fullname}
@@ -168,7 +171,7 @@ export default function Home() {
               >
                 Back
               </Button>
-              <FinishButton finish={finish} handleFinish={uploadToIPFS} />
+              <FinishButton finish={finish} handleFinish={CreateCredential} />
             </Box>
           </Container>
         )}
