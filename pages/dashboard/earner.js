@@ -7,8 +7,58 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import Credential from "../../components/credential/Credential";
+import { useEffect, useState } from "react";
+import { ethers } from "ethers";
+import axios from "axios";
+
+import { credentialsRegistryAddress } from "../../config";
+import CredentialRegistry from "../../artifacts/contracts/CredentialsRegistry.sol/CredentialsRegistry.json";
 
 export default function Earner() {
+  const [credentials, setCredentials] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadCredentials();
+    console.log(credentials);
+  }, []);
+  async function loadCredentials() {
+    /* create a generic provider and query for unsold market items */
+    const provider = new ethers.providers.JsonRpcProvider();
+    const contract = new ethers.Contract(
+      credentialsRegistryAddress,
+      CredentialRegistry.abi,
+      provider
+    );
+    const data = await contract.fetchAllCredentials();
+
+    /*
+     *  map over items returned from smart contract and format
+     *  them as well as fetch their token metadata
+     */
+    const items = await Promise.all(
+      data.map(async (i) => {
+        const tokenUri = await contract.tokenURI(i.tokenId);
+        const meta = await axios.get(tokenUri);
+        let item = {
+          tokenId: i.tokenId.toString(),
+          issuer: i.issuer,
+          owner: i.owner,
+          tokenUri,
+          title: meta.data.title,
+          awarded_to: meta.data.awarded_to,
+          description: meta.data.description,
+          image: meta.data.image,
+          signatures: meta.data.signatures,
+        };
+        return item;
+      })
+    );
+
+    setCredentials(items);
+    setLoading(false);
+  }
   return (
     <div>
       <Head>
@@ -33,8 +83,12 @@ export default function Earner() {
             </Typography>
           </Toolbar>
         </AppBar>
-        Earner Dashboard
       </Box>
+      {credentials &&
+        credentials.map((credential, index) => (
+          <Credential credential={credential} key={index} />
+        ))}
+      {loading ? <p>loading...</p> : null}
     </div>
   );
 }
