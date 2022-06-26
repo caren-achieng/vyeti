@@ -44,7 +44,7 @@ export default function Employer() {
         <Box sx={{ mt: 20, position: "fixed" }}>
           <Tooltip title="back to dashboard">
             <Fab
-              href="/dashboard"
+              href="/dashboard/provider"
               aria-label="dashboard"
               sx={{ bgcolor: "#fff", color: "#009688", m: 2 }}
             >

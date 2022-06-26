@@ -25,6 +25,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import ArchiveIcon from "@mui/icons-material/Archive";
 
 import CreateProgramme from "../../../components/programme/CreateProgramme";
+import ProgrammeList from "../../../components/programme/ProgrammeList";
 
 const drawerWidth = 240;
 
@@ -189,6 +190,7 @@ export default function Dashboard() {
           <DrawerHeader />
           <div hidden={value !== 0}>
             <CreateProgramme />
+            <ProgrammeList />
           </div>
           <div hidden={value !== 1}>Institution</div>
           <div hidden={value !== 2}>Messages</div>

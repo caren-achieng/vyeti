@@ -7,6 +7,7 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import WalletConnect from "../../components/util/WalletConnect";
 import ProviderForm from "../../components/provider/ProviderForm";
 import SideSection from "../../components/layout/SideSection";
@@ -28,6 +29,7 @@ export default function Provider() {
   const [next, setNext] = useState(false);
   const [finish, setFinish] = useState(false);
   const [errors, setErrors] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     if (!institutionname || !fullname || !email || !phonenumber) {
@@ -67,11 +69,13 @@ export default function Provider() {
         phone: phonenumber,
         physical_address: physicaladdress,
       };
-      await axios.post("/api/providers", data);
-      console.log("success");
+      const res = await axios.post("/api/providers", data);
+      if (res) {
+        router.push("/dashboard/provider");
+      }
     } catch (err) {
       console.log(err);
-      if (err) {
+      if (err.response) {
         setErrors(Object.values(err.response.data.errors));
       }
     }

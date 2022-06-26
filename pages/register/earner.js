@@ -7,6 +7,7 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import WalletConnect from "../../components/util/WalletConnect";
 import EarnerForm from "../../components/earner/EarnerForm";
 import SideSection from "../../components/layout/SideSection";
@@ -25,6 +26,7 @@ export default function Earner() {
   const [next, setNext] = useState(false);
   const [finish, setFinish] = useState(false);
   const [errors, setErrors] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     if (!firstname || !lastname || !email) {
@@ -61,8 +63,10 @@ export default function Earner() {
         email: email,
         wallet: walletaddress,
       };
-      await axios.post("/api/earners", data);
-      console.log("success");
+      const res = await axios.post("/api/earners", data);
+      if (res) {
+        router.push("/dashboard/earner");
+      }
     } catch (err) {
       console.log(err);
       if (err) {

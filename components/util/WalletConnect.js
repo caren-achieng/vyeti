@@ -1,32 +1,10 @@
 import React from "react";
-import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
-import WalletConnectProvider from "@walletconnect/web3-provider";
-import Torus from "@toruslabs/torus-embed";
-import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
 import Button from "@mui/material/Button";
+import providerOptions from "../../lib/providerOptions";
 
 export default function WalletConnect(props) {
-  const providerOptions = {
-    torus: {
-      package: Torus, // required
-    },
-    walletconnect: {
-      package: WalletConnectProvider, // required
-      options: {
-        infuraId: process.env.PROJECT_ID, // Required
-      },
-    },
-    coinbasewallet: {
-      package: CoinbaseWalletSDK, // Required
-      options: {
-        appName: "Vyeti", // Required
-        infuraId: process.env.PROJECT_ID, // Required
-      },
-    },
-  };
-
   const connectWallet = async () => {
     const web3Modal = new Web3Modal({ providerOptions });
     const connection = await web3Modal.connect();

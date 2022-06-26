@@ -7,6 +7,7 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import WalletConnect from "../../components/util/WalletConnect";
 import EmployerForm from "../../components/employer/EmployerForm";
 import SideSection from "../../components/layout/SideSection";
@@ -27,6 +28,7 @@ export default function Employer() {
   const [next, setNext] = useState(false);
   const [finish, setFinish] = useState(false);
   const [errors, setErrors] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     if (!organizationname || !fullname || !email || !phonenumber) {
@@ -65,8 +67,10 @@ export default function Employer() {
         phone: phonenumber,
         physical_address: physicaladdress,
       };
-      await axios.post("/api/employers", data);
-      console.log("success");
+      const res = await axios.post("/api/employers", data);
+      if (res) {
+        router.push("/dashboard/employer");
+      }
     } catch (err) {
       console.log(err);
       if (err) {
