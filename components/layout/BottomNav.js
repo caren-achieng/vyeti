@@ -5,16 +5,13 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
-export default function Navbar() {
+export default function BottomNav() {
   return (
     <Box sx={{ flexGrow: 1}}>
       <AppBar position="static">
         <Toolbar sx={{backgroundColor: "#4D776D"}}>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontSize:30}}>
-            VYETI
-          </Typography>
-            <Button sx={{ color: "#fff" }}>Sign up</Button>
-            <Button sx={{ color: "#fff" }}>Log in</Button>
+            <Button sx={{ flexGrow:1, color: "#fff" }}>Dashboard</Button>
+            <Button sx={{ flexGrow:1, color: "#fff" }}>settings</Button>
         </Toolbar>
       </AppBar>
     </Box>
