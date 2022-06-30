@@ -1,5 +1,4 @@
 import React from "react";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -7,16 +6,14 @@ import Typography from "@mui/material/Typography";
 export default function Credential({ credential }) {
   const signatures = credential.signatures;
   return (
-    <Grid container sx={{ m: 4 }}>
+    <Grid container sx={{ mt: 3, ml: 4, mr: 4, mb: 0 }}>
       <Grid item xs={12} sm={3} md={3}>
-        <Avatar
-          variant="rounded"
-          src={credential.image}
-          sx={{ m: 2, width: 280, height: 280 }}
-        />
+        <Box sx={{ m: 2 }}>
+          <img src={credential.image} style={{ width: 240 }} />
+        </Box>
       </Grid>
       <Grid item xs={12} sm={8} md={8}>
-        <Box sx={{ m: 2 }}>
+        <Box sx={{ m: 1, backgroundColor: "#eeeeee", p: 2, borderRadius: 2 }}>
           <Typography variant="h4" sx={{ m: 1 }}>
             {credential.title}
           </Typography>
@@ -40,7 +37,7 @@ export default function Credential({ credential }) {
           <Typography variant="body1" sx={{ m: 1 }}>
             {credential.description}
           </Typography>
-          <Box sx={{ m: 10 }} />
+          <Box sx={{ m: 4 }} />
           <Grid container spacing={2} sx={{ m: 1 }}>
             {signatures &&
               signatures.map((signature) => (

@@ -1,5 +1,4 @@
 import React from "react";
-import { useState } from "react";
 import Fab from "@mui/material/Fab";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
@@ -19,6 +18,7 @@ export default function ImageUpload({ setFileUrl, fileUrl }) {
       });
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       setFileUrl(url);
+      console.log(url);
     } catch (error) {
       console.log("Error uploading file: ", error);
     }

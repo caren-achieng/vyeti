@@ -1,20 +1,14 @@
 import Head from "next/head";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import Credential from "../../components/credential/Credential";
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
 
-import { credentialsRegistryAddress } from "../../config";
-import CredentialRegistry from "../../artifacts/contracts/CredentialsRegistry.sol/CredentialsRegistry.json";
-import CredentialCard from "../../components/credential/CredentialCard";
-import Navbar from "../../components/layout/Navbar";
+import { credentialsRegistryAddress } from "../../../config";
+import CredentialRegistry from "../../../artifacts/contracts/CredentialsRegistry.sol/CredentialsRegistry.json";
+import CredentialCard from "../../../components/credential/CredentialCard";
+import Navbar from "../../../components/layout/Navbar";
 
 export default function Earner() {
   const [credentials, setCredentials] = useState([]);
@@ -68,11 +62,7 @@ export default function Earner() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-      {credentials &&
-        credentials.map((credential, index) => (
-          <Credential credential={credential} key={index} />
-        ))}
-      {loading ? <p>loading...</p> : null}
+
       <Container maxWidth="lg">
         <Grid sx={{ m: 4 }}>
           <Grid container spacing={2}>

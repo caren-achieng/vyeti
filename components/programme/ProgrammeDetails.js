@@ -6,7 +6,6 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 
 import VerifiedIcon from "@mui/icons-material/Verified";
-import SearchCredential from "../credential/SearchCredential";
 
 export default function ProgrammeDetails() {
   return (

@@ -1,20 +1,15 @@
 import Head from "next/head";
 import Container from "@mui/material/Container";
-import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import Tooltip from "@mui/material/Tooltip";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import ProgrammeDetails from "../../../../components/programme/ProgrammeDetails";
 import CreateCredential from "../../../../components/credential/CreateCredential";
 import Navbar from "../../../../components/layout/Navbar";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import EditIcon from "@mui/icons-material/Edit";
+
 import ArchiveIcon from "@mui/icons-material/Archive";
+import DashboardButton from "../../../../components/util/DashboardButton";
 
 export default function Employer() {
   return (
@@ -42,15 +37,7 @@ export default function Employer() {
           </Tooltip>
         </Box>
         <Box sx={{ mt: 20, position: "fixed" }}>
-          <Tooltip title="back to dashboard">
-            <Fab
-              href="/dashboard/provider"
-              aria-label="dashboard"
-              sx={{ bgcolor: "#fff", color: "#009688", m: 2 }}
-            >
-              <DashboardIcon />
-            </Fab>
-          </Tooltip>
+          <DashboardButton link={"/dashboard/provider"} />
         </Box>
       </Box>
       <ProgrammeDetails />

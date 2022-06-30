@@ -116,23 +116,27 @@ export default function CreateCredential() {
   }
 
   async function CreateCredential() {
-    const url = await uploadToIPFS();
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
+    try {
+      const url = await uploadToIPFS();
 
-    let contract = new ethers.Contract(
-      credentialsRegistryAddress,
-      CredentialRegistry.abi,
-      signer
-    );
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
 
-    let transaction = await contract.createCredentialToken(url);
-    let tx = await transaction.wait();
-    let event = tx.events[0];
+      let contract = new ethers.Contract(
+        credentialsRegistryAddress,
+        CredentialRegistry.abi,
+        signer
+      );
+      let transaction = await contract.createCredentialToken(url);
+      let tx = await transaction.wait();
+      let event = tx.events[0];
 
-    console.log("Success", event);
+      console.log("Success", event);
+    } catch (error) {
+      console.log("An error occured", error);
+    }
   }
 
   return (
