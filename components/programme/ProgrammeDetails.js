@@ -7,26 +7,26 @@ import Typography from "@mui/material/Typography";
 
 import VerifiedIcon from "@mui/icons-material/Verified";
 
-export default function ProgrammeDetails() {
+export default function ProgrammeDetails({ programme }) {
   return (
     <div>
       <Container maxWidth="md">
         <Box sx={{ mt: 4 }}>
           <Typography variant="h3" sx={{ m: 2 }}>
-            Bsc. Informatics and Computer Science
+            {programme.programme_name}
           </Typography>
 
           <Box sx={{ display: "flex", ml: 1 }}>
             <Typography variant="body1" sx={{ fontWeight: 600, m: 1 }}>
               Programme by
             </Typography>
-            <Link href="/">
+            <Link href={`/org/slug`}>
               <Typography
                 variant="body1"
                 color="primary"
                 sx={{ fontWeight: 600, m: 1, ml: 0 }}
               >
-                Strathmore University
+                {programme.provider.institution_name}
               </Typography>
             </Link>
           </Box>
@@ -41,13 +41,7 @@ export default function ProgrammeDetails() {
               Description
             </Typography>
             <Typography variant="body1" sx={{ m: 2 }}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
+              {programme.description}
             </Typography>
           </Paper>
         </Box>

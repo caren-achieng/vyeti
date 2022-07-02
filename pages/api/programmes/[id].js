@@ -11,7 +11,10 @@ export default async function handler(req, res) {
 
   if (method === "GET") {
     try {
-      const programme = await Programme.findById(id);
+      const programme = await Programme.findById(id).populate(
+        "provider",
+        "_id institution_name"
+      );
       res.status(200).json({ programme });
     } catch (err) {
       res.status(500).json(err);

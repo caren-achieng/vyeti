@@ -11,24 +11,28 @@ export default function ProgrammeCard({ programme }) {
   return (
     <Grid item xs={12} sm={6} lg={4}>
       <Card elevation={3} sx={{ borderRadius: 2 }}>
-        <CardActionArea href={`/dashboard/provider/programmes/1`}>
+        <CardActionArea
+          href={`/dashboard/provider/programmes/${programme._id}`}
+        >
           <Box sx={{ backgroundColor: "#4D776D", height: 30 }} />
           <CardContent sx={{ p: 2 }}>
             <Box sx={{ height: 64, overflow: "hidden" }}>
               <Typography variant="h6" sx={{ color: "#004d40" }}>
-                {programme.name}
+                {programme.programme_name}
               </Typography>
             </Box>
-
-            <Typography
-              noWrap
-              gutterBottom
-              variant="subtitle2"
-              component="div"
-              color="text.secondary"
+            <Box
+              sx={{
+                height: 20,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                width: "24rem",
+              }}
             >
-              {programme.description}
-            </Typography>
+              <Typography noWrap variant="subtitle2" color="text.secondary">
+                {programme.description}
+              </Typography>
+            </Box>
 
             <Box sx={{ m: 1 }} />
           </CardContent>

@@ -49,6 +49,10 @@ const providerSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    slug: {
+      type: String,
+      required: true,
+    },
     type: {
       type: String,
       required: [true, "Please select a Category"],

@@ -6,15 +6,9 @@ export async function middleware(req) {
   const { cookies } = req;
 
   if (path.includes("/dashboard")) {
-    url.pathname = "/login";
+    url.pathname = "/";
     const token = cookies.vyeti_jwt;
     if (token === undefined) return NextResponse.redirect(url);
-  }
-
-  if (req.nextUrl.pathname === "/login") {
-    url.pathname = "/";
-    const jwt = cookies.vyeti_jwt;
-    if (jwt) return NextResponse.redirect(url);
   }
 
   return NextResponse.next();

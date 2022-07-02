@@ -1,5 +1,7 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -12,11 +14,13 @@ import Typography from "@mui/material/Typography";
 
 import AddIcon from "@mui/icons-material/Add";
 
-export default function CreateProgramme() {
+export default function CreateProgramme({ providerId }) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState([]);
+
+  const router = useRouter();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -28,8 +32,17 @@ export default function CreateProgramme() {
 
   const createProgramme = async (e) => {
     e.preventDefault();
+    const provider_id = providerId;
     try {
+      const newProgramme = {
+        provider: provider_id,
+        programme_name: name,
+        description: description,
+      };
+      const res = await axios.post(`/api/programmes`, newProgramme);
+      const programme = res.data;
       setOpen(false);
+      router.push(`/dashboard/provider/programmes/${programme._id}`);
     } catch (err) {
       console.log(err);
       setErrors(err.response.data.errors);
@@ -63,15 +76,13 @@ export default function CreateProgramme() {
           <Typography variant="caption" sx={{ color: "red" }}>
             {errors?.name?.message}
           </Typography>
-          <Typography variant="caption" sx={{ color: "red" }}>
-            {errors?.headline?.message}
-          </Typography>
+
           <Box sx={{ m: 2 }} />
           <TextField
             id="filled-multiline-static"
             label="Description"
             multiline
-            rows={4}
+            rows={8}
             fullWidth
             variant="filled"
             required

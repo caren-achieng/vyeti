@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useState, useEffect } from "react";
 import { styled, useTheme } from "@mui/material/styles";
-
+import axios from "axios";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -26,6 +26,9 @@ import ArchiveIcon from "@mui/icons-material/Archive";
 
 import CreateProgramme from "../../../components/programme/CreateProgramme";
 import ProgrammeList from "../../../components/programme/ProgrammeList";
+
+import jwt from "jsonwebtoken";
+import { parse } from "cookie";
 
 const drawerWidth = 240;
 
@@ -100,7 +103,7 @@ const buttonsinfo = [
   { text: "Messages", link: "/messages", value: 2 },
 ];
 
-export default function Dashboard() {
+export default function ProviderDashboard({ provider, programmes }) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(0);
@@ -186,12 +189,15 @@ export default function Dashboard() {
             ))}
           </List>
         </Drawer>
+
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
-          <div hidden={value !== 0}>
-            <CreateProgramme />
-            <ProgrammeList />
-          </div>
+          {provider ? (
+            <div hidden={value !== 0}>
+              <CreateProgramme providerId={provider._id} />
+              <ProgrammeList programmes={programmes} />
+            </div>
+          ) : null}
           <div hidden={value !== 1}>Institution</div>
           <div hidden={value !== 2}>Messages</div>
           <div hidden={value !== 3}>Sth</div>
@@ -201,3 +207,40 @@ export default function Dashboard() {
     </div>
   );
 }
+
+export const getServerSideProps = async ({ req }) => {
+  const { cookies } = req;
+  const token = cookies.vyeti_jwt;
+  const decoded_token = jwt.decode(token);
+  const account_id = decoded_token.id;
+  if (decoded_token.type === "employer") {
+    return {
+      redirect: {
+        destination: "/dashboard/employer",
+        permanent: false,
+      },
+    };
+  } else if (decoded_token.type === "earner") {
+    return {
+      redirect: {
+        destination: "/dashboard/earner",
+        permanent: false,
+      },
+    };
+  } else {
+    const account = await axios.get(
+      `http://localhost:3000/api/providers/account/${account_id}`
+    );
+    const providerId = account.data.provider._id;
+
+    const res = await axios.get(
+      `http://localhost:3000/api/providers/${providerId}`
+    );
+    return {
+      props: {
+        provider: res.data.provider,
+        programmes: res.data.programmes,
+      },
+    };
+  }
+};
