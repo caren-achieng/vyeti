@@ -20,7 +20,7 @@ export default function ProgrammeDetails({ programme }) {
             <Typography variant="body1" sx={{ fontWeight: 600, m: 1 }}>
               Programme by
             </Typography>
-            <Link href={`/org/slug`}>
+            <Link href={`/org/${programme.provider.slug}`}>
               <Typography
                 variant="body1"
                 color="primary"

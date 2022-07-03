@@ -1,4 +1,5 @@
 import Head from "next/head";
+import axios from "axios";
 import { useEffect, useState, forwardRef } from "react";
 import { ethers } from "ethers";
 import { create as ipfsHttpClient } from "ipfs-http-client";
@@ -36,7 +37,7 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function CreateCredential() {
+export default function CreateCredential({ providerId, programmeId }) {
   const [open, setOpen] = useState(false);
   const [fileUrl, setFileUrl] = useState(null);
   const [title, setTitle] = useState("");
@@ -132,6 +133,34 @@ export default function CreateCredential() {
       let transaction = await contract.createCredentialToken(url);
       let tx = await transaction.wait();
       let event = tx.events[0];
+      let value = event.args[2];
+      let tokenId = value.toNumber();
+
+      if (tokenId) {
+        const data = {
+          tokenId: tokenId,
+          programme: programmeId,
+          institution: providerId,
+          title: title,
+          issued_to: {
+            name: fullname,
+            email: email,
+          },
+          image: fileUrl,
+        };
+        await axios.post(`/api/credentials`, data);
+        await axios.post(`/api/mails/credentials`, data);
+        setOpen(false);
+        setTitle("");
+        setFullName("");
+        setEmail("");
+        setDescription("");
+        setSignatures([]);
+        setFinish(false);
+        setActiveStep(0);
+        setFileUrl(null);
+        setNoOfsignatures(1);
+      }
 
       console.log("Success", event);
     } catch (error) {

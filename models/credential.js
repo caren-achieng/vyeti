@@ -7,6 +7,10 @@ const credentialSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    title: {
+      type: String,
+      required: true,
+    },
     programme: {
       type: ObjectId,
       ref: "Programme",

@@ -6,25 +6,27 @@ import Grid from "@mui/material/Grid";
 import CardActionArea from "@mui/material/CardActionArea";
 import Typography from "@mui/material/Typography";
 
-export default function CredentialCard() {
+export default function CredentialCard({ credential }) {
   return (
     <Grid item xs={12} sm={6} lg={4}>
       <Card elevation={2} sx={{ backgroundColor: "#fafafa" }}>
-        <CardActionArea href={`/dashboard/earner/credential/1`}>
+        <CardActionArea
+          href={`/dashboard/earner/credential/${credential.tokenId}`}
+        >
           <Box sx={{ display: "flex" }}>
             <Avatar
               alt="Remy Sharp"
               sx={{ width: 90, height: 90, m: 2 }}
               variant="rounded"
-              src="http://localhost:3000/image.png"
+              src={credential.image}
             />
             <Box sx={{ mt: 3, mr: 2 }}>
               <Box sx={{ height: 50, overflow: "hidden" }}>
-                <Typography variant="body1">
-                  Bsc.Informatics and Computer Informatics and Computer Science
-                </Typography>
+                <Typography variant="body1">{credential.title}</Typography>
               </Box>
-              <Typography variant="caption">Strathmore University</Typography>
+              <Typography variant="caption">
+                {credential.institution.institution_name}
+              </Typography>
             </Box>
           </Box>
         </CardActionArea>

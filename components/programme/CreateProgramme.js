@@ -74,7 +74,7 @@ export default function CreateProgramme({ providerId }) {
             onChange={(e) => setName(e.target.value)}
           />
           <Typography variant="caption" sx={{ color: "red" }}>
-            {errors?.name?.message}
+            {errors?.programme_name?.message}
           </Typography>
 
           <Box sx={{ m: 2 }} />

@@ -23,7 +23,10 @@ export default function Programme({ programme }) {
       <Navbar />
       <Box sx={{ m: 2 }}>
         <Box sx={{ position: "fixed" }}>
-          <CreateCredential />
+          <CreateCredential
+            programmeId={programme._id}
+            providerId={programme.provider._id}
+          />
         </Box>
 
         <Box sx={{ mt: 10, position: "fixed" }}>

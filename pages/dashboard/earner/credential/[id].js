@@ -16,7 +16,7 @@ import ShareButton from "../../../../components/util/ShareButton";
 import DashboardButton from "../../../../components/util/DashboardButton";
 import ClaimCredential from "../../../../components/credential/ClaimCredential";
 
-export default function CredentialPage() {
+export default function CredentialPage({ tokenId }) {
   const [credentials, setCredentials] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -32,7 +32,7 @@ export default function CredentialPage() {
       CredentialRegistry.abi,
       provider
     );
-    const data = await contract.fetchCredentialById(2);
+    const data = await contract.fetchCredentialById(tokenId);
 
     /*
      *  map over items returned from smart contract and format
@@ -110,3 +110,11 @@ export default function CredentialPage() {
     </div>
   );
 }
+
+export const getServerSideProps = async ({ params }) => {
+  return {
+    props: {
+      tokenId: params.id,
+    },
+  };
+};

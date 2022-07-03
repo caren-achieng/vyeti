@@ -4,56 +4,13 @@ import Container from "@mui/material/Container";
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
-
+import jwt from "jsonwebtoken";
 import { credentialsRegistryAddress } from "../../../config";
 import CredentialRegistry from "../../../artifacts/contracts/CredentialsRegistry.sol/CredentialsRegistry.json";
 import CredentialCard from "../../../components/credential/CredentialCard";
 import Navbar from "../../../components/layout/Navbar";
 
-export default function Earner() {
-  const [credentials, setCredentials] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    loadCredentials();
-    console.log(credentials);
-  }, []);
-  async function loadCredentials() {
-    /* create a generic provider and query for unsold market items */
-    const provider = new ethers.providers.JsonRpcProvider();
-    const contract = new ethers.Contract(
-      credentialsRegistryAddress,
-      CredentialRegistry.abi,
-      provider
-    );
-    const data = await contract.fetchAllCredentials();
-
-    /*
-     *  map over items returned from smart contract and format
-     *  them as well as fetch their token metadata
-     */
-    const items = await Promise.all(
-      data.map(async (i) => {
-        const tokenUri = await contract.tokenURI(i.tokenId);
-        const meta = await axios.get(tokenUri);
-        let item = {
-          tokenId: i.tokenId.toString(),
-          issuer: i.issuer,
-          owner: i.owner,
-          tokenUri,
-          title: meta.data.title,
-          awarded_to: meta.data.awarded_to,
-          description: meta.data.description,
-          image: meta.data.image,
-          signatures: meta.data.signatures,
-        };
-        return item;
-      })
-    );
-
-    setCredentials(items);
-    setLoading(false);
-  }
+export default function Earner({ earner, credentials }) {
   return (
     <div>
       <Head>
@@ -66,12 +23,50 @@ export default function Earner() {
       <Container maxWidth="lg">
         <Grid sx={{ m: 4 }}>
           <Grid container spacing={2}>
-            <CredentialCard />
-            <CredentialCard />
-            <CredentialCard />
+            {credentials &&
+              credentials.map((credential) => (
+                <CredentialCard credential={credential} key={credential._id} />
+              ))}
           </Grid>
         </Grid>
       </Container>
     </div>
   );
 }
+
+export const getServerSideProps = async ({ req }) => {
+  const { cookies } = req;
+  const token = cookies.vyeti_jwt;
+  const decoded_token = jwt.decode(token);
+  const account_id = decoded_token.id;
+  if (decoded_token.type === "employer") {
+    return {
+      redirect: {
+        destination: "/dashboard/employer",
+        permanent: false,
+      },
+    };
+  } else if (decoded_token.type === "provider") {
+    return {
+      redirect: {
+        destination: "/dashboard/provider",
+        permanent: false,
+      },
+    };
+  } else {
+    const account = await axios.get(
+      `http://localhost:3000/api/earners/account/${account_id}`
+    );
+    const earnerId = account.data.earner._id;
+
+    const res = await axios.get(
+      `http://localhost:3000/api/earners/${earnerId}`
+    );
+    return {
+      props: {
+        earner: res.data.earner,
+        credentials: res.data.credentials,
+      },
+    };
+  }
+};

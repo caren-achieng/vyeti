@@ -28,7 +28,6 @@ import CreateProgramme from "../../../components/programme/CreateProgramme";
 import ProgrammeList from "../../../components/programme/ProgrammeList";
 
 import jwt from "jsonwebtoken";
-import { parse } from "cookie";
 
 const drawerWidth = 240;
 

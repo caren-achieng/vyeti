@@ -16,6 +16,7 @@ import NextButton from "../../components/util/NextButton";
 import ErrorDisplay from "../../components/util/ErrorDisplay";
 import FinishButton from "../../components/util/FinishButton";
 import SuccessDisplay from "../../components/util/SuccessDisplay";
+import slugify from "slugify";
 
 export default function Provider() {
   const [institutionname, setInstitutionName] = useState("");
@@ -62,6 +63,7 @@ export default function Provider() {
     try {
       const data = {
         institution_name: institutionname,
+        slug: slugify(`${institutionname} `).toLowerCase(),
         contact_person: fullname,
         email: email,
         wallet: walletaddress,

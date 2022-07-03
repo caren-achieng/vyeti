@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     try {
       const programme = await Programme.findById(id).populate(
         "provider",
-        "_id institution_name"
+        "_id institution_name slug"
       );
       res.status(200).json({ programme });
     } catch (err) {
