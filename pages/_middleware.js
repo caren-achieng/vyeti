@@ -6,7 +6,7 @@ export async function middleware(req) {
   const { cookies } = req;
 
   if (path.includes("/dashboard")) {
-    url.pathname = "/";
+    url.pathname = "/register/earner";
     const token = cookies.vyeti_jwt;
     if (token === undefined) return NextResponse.redirect(url);
   }

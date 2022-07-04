@@ -1,16 +1,31 @@
 import Head from "next/head";
+import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
-import { useEffect, useState } from "react";
-import { ethers } from "ethers";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import TabPanel from "../../../components/util/TabPanel";
+import { useState } from "react";
 import axios from "axios";
 import jwt from "jsonwebtoken";
-import { credentialsRegistryAddress } from "../../../config";
-import CredentialRegistry from "../../../artifacts/contracts/CredentialsRegistry.sol/CredentialsRegistry.json";
 import CredentialCard from "../../../components/credential/CredentialCard";
 import Navbar from "../../../components/layout/Navbar";
+import EarnerProfile from "../../../components/earner/EarnerProfile";
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
 
 export default function Earner({ earner, credentials }) {
+  const [value, setValue] = useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <div>
       <Head>
@@ -19,17 +34,43 @@ export default function Earner({ earner, credentials }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-
-      <Container maxWidth="lg">
-        <Grid sx={{ m: 4 }}>
-          <Grid container spacing={2}>
-            {credentials &&
-              credentials.map((credential) => (
-                <CredentialCard credential={credential} key={credential._id} />
-              ))}
-          </Grid>
-        </Grid>
+      <Container>
+        <Box
+          sx={{ borderBottom: 1, borderColor: "divider", ml: 3, mr: 3, mt: 3 }}
+        >
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+            centered
+            textColor="secondary"
+            indicatorColor="secondary"
+          >
+            <Tab label="My Credentials" {...a11yProps(0)} sx={{ ml: 2 }} />
+            <Tab label="Profile Details" {...a11yProps(1)} sx={{ ml: 2 }} />
+          </Tabs>
+        </Box>
       </Container>
+      <TabPanel value={value} index={0}>
+        <Container maxWidth="lg">
+          <Grid sx={{ m: 2 }}>
+            <Grid container spacing={2}>
+              {credentials &&
+                credentials.map((credential) => (
+                  <CredentialCard
+                    credential={credential}
+                    key={credential._id}
+                  />
+                ))}
+            </Grid>
+          </Grid>
+        </Container>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <Container maxWidth="lg">
+          <EarnerProfile earner={earner} />
+        </Container>
+      </TabPanel>
     </div>
   );
 }

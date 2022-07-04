@@ -100,7 +100,7 @@ const Drawer = styled(MuiDrawer, {
 const buttonsinfo = [
   { text: "Institution Profile", link: "/campaigns", value: 0 },
   { text: "Programmes", link: "/contacts", value: 1 },
-  { text: "Messages", link: "/messages", value: 2 },
+  { text: "Archived Items", link: "/messages", value: 2 },
 ];
 
 export default function ProviderDashboard({ provider, programmes }) {
@@ -175,7 +175,7 @@ export default function ProviderDashboard({ provider, programmes }) {
                       color={index === value ? "primary" : "inherit"}
                     />
                   ) : index === 2 ? (
-                    <ClassIcon
+                    <ArchiveIcon
                       color={index === value ? "primary" : "inherit"}
                     />
                   ) : (
@@ -199,7 +199,7 @@ export default function ProviderDashboard({ provider, programmes }) {
             <CreateProgramme providerId={provider._id} />
             <ProgrammeList programmes={programmes} />
           </div>
-          <div hidden={value !== 2}>Messages</div>
+          <div hidden={value !== 2}>Archived Items</div>
           <div hidden={value !== 3}>Sth</div>
           <div hidden={value !== 4}>Archived</div>
         </Box>

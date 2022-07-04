@@ -12,9 +12,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import EditIcon from "@mui/icons-material/Edit";
 import InputAdornment from "@mui/material/InputAdornment";
 
+import EditIcon from "@mui/icons-material/Edit";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
@@ -96,7 +96,7 @@ export default function EditProvider({ provider }) {
             variant="filled"
             required
             onChange={(e) => setName(e.target.value)}
-            value={provider.institution_name}
+            value={name}
           />
           <Typography variant="caption" sx={{ color: "red" }}>
             {errors?.institution_name?.message}
@@ -113,7 +113,7 @@ export default function EditProvider({ provider }) {
             placeholder="An interesting one-liner: 100 characters max"
             required
             onChange={(e) => setHeadline(e.target.value)}
-            value={provider.headline}
+            value={headline}
           />
           <Typography variant="caption" sx={{ color: "red" }}>
             {errors?.headline?.message}
@@ -130,7 +130,7 @@ export default function EditProvider({ provider }) {
             placeholder="An more detailed description: 500 characters max"
             required
             onChange={(e) => setDescription(e.target.value)}
-            value={provider.description}
+            value={description}
           />
           <Typography variant="caption" sx={{ color: "red" }}>
             {errors?.description?.message}
@@ -153,7 +153,7 @@ export default function EditProvider({ provider }) {
                 }}
                 variant="filled"
                 onChange={(e) => setLinkedInLink(e.target.value)}
-                value={provider.links?.linkedIn}
+                value={linkedInLink}
               />
             </Grid>
             <Grid item xs={12} sm={12} md={6}>
@@ -170,7 +170,7 @@ export default function EditProvider({ provider }) {
                 }}
                 variant="filled"
                 onChange={(e) => setFacebookLink(e.target.value)}
-                value={provider.links?.facebook}
+                value={facebookLink}
               />
             </Grid>
             <Grid item xs={12} sm={12} md={6}>
@@ -187,7 +187,7 @@ export default function EditProvider({ provider }) {
                 }}
                 variant="filled"
                 onChange={(e) => setTwitterLink(e.target.value)}
-                value={provider.links?.twitter}
+                value={twitterLink}
               />
             </Grid>
             <Grid item xs={12} sm={12} md={6}>
@@ -204,7 +204,7 @@ export default function EditProvider({ provider }) {
                 }}
                 variant="filled"
                 onChange={(e) => setInstagramLink(e.target.value)}
-                value={provider.links?.instagram}
+                value={instagramLink}
               />
             </Grid>
           </Grid>
@@ -222,7 +222,7 @@ export default function EditProvider({ provider }) {
             }}
             variant="filled"
             onChange={(e) => setWebsiteLink(e.target.value)}
-            value={provider.links?.webUrl}
+            value={websiteLink}
           />
         </DialogContent>
         <DialogActions>

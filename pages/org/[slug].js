@@ -67,7 +67,7 @@ export default function Organization({ provider, programmes }) {
                 color="text.secondary"
                 sx={{ mr: 2 }}
               >
-                378 programmes
+                30 programmes
               </Typography>
               <Typography
                 variant="subtitle1"
@@ -91,9 +91,11 @@ export default function Organization({ provider, programmes }) {
             <Typography variant="h5" sx={{ m: 2 }}>
               About
             </Typography>
-            <Typography variant="body1" sx={{ m: 2 }}>
-              {provider.description}
-            </Typography>
+            <Box sx={{ textAlign: "justify" }}>
+              <Typography variant="body1" sx={{ m: 2 }}>
+                {provider.description}
+              </Typography>
+            </Box>
           </Paper>
         </Box>
       </Container>

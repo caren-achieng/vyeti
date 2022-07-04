@@ -45,7 +45,7 @@ export default function ProviderProfile({ provider }) {
               color="text.secondary"
               sx={{ mr: 2 }}
             >
-              378 programmes
+              30 programmes
             </Typography>
             <Typography
               variant="subtitle1"
@@ -72,9 +72,11 @@ export default function ProviderProfile({ provider }) {
           </Typography>
 
           {provider.description ? (
-            <Typography variant="body1" sx={{ m: 2 }}>
-              {provider.description}
-            </Typography>
+            <Box sx={{ textAlign: "justify" }}>
+              <Typography variant="body1" sx={{ m: 2 }}>
+                {provider.description}
+              </Typography>
+            </Box>
           ) : (
             <Typography variant="body1" color="text.secondary" sx={{ m: 2 }}>
               Select EDIT DETAILS to add description

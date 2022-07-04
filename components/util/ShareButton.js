@@ -31,7 +31,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { IconButton } from "@mui/material";
 
-export default function ShareButton(props) {
+export default function ShareButton({ link }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -45,9 +45,7 @@ export default function ShareButton(props) {
   };
 
   const copyToClipboard = (e) => {
-    navigator.clipboard.writeText(
-      "http://localhost:3000/dashboard/earner/credential/1"
-    );
+    navigator.clipboard.writeText(link);
     setCopied(true);
   };
 
@@ -69,64 +67,50 @@ export default function ShareButton(props) {
           <DialogContentText></DialogContentText>
           <Box sx={{ display: "flex" }}>
             <Box sx={{ m: 0.5 }}>
+              <Tooltip title="linkedin">
+                <LinkedinShareButton url={link}>
+                  <LinkedinIcon size={50} round={true} />
+                </LinkedinShareButton>
+              </Tooltip>
+            </Box>
+            <Box sx={{ m: 0.5 }}>
               <Tooltip title="whatsapp">
-                <WhatsappShareButton
-                  url={"http://localhost:3000/dashboard/earner/credential/1"}
-                >
+                <WhatsappShareButton url={link}>
                   <WhatsappIcon size={50} round={true} />
                 </WhatsappShareButton>
               </Tooltip>
             </Box>
             <Box sx={{ m: 0.5 }}>
               <Tooltip title="facebook">
-                <FacebookShareButton
-                  url={"http://localhost:3000/dashboard/earner/credential/1"}
-                >
+                <FacebookShareButton url={link}>
                   <FacebookIcon size={50} round={true} />
                 </FacebookShareButton>
               </Tooltip>
             </Box>
             <Box sx={{ m: 0.5 }}>
               <Tooltip title="twitter">
-                <TwitterShareButton
-                  url={"http://localhost:3000/dashboard/earner/credential/1"}
-                >
+                <TwitterShareButton url={link}>
                   <TwitterIcon size={50} round={true} />
                 </TwitterShareButton>
               </Tooltip>
             </Box>
             <Box sx={{ m: 0.5 }}>
-              <Tooltip title="linkedin">
-                <LinkedinShareButton
-                  url={"http://localhost:3000/dashboard/earner/credential/1"}
-                >
-                  <LinkedinIcon size={50} round={true} />
-                </LinkedinShareButton>
-              </Tooltip>
-            </Box>
-            <Box sx={{ m: 0.5 }}>
               <Tooltip title="reddit">
-                <RedditShareButton
-                  url={"http://localhost:3000/dashboard/earner/credential/1"}
-                >
+                <RedditShareButton url={link}>
                   <RedditIcon size={50} round={true} />
                 </RedditShareButton>
               </Tooltip>
             </Box>
             <Box sx={{ m: 0.5 }}>
               <Tooltip title="telegram">
-                <TelegramShareButton
-                  url={"http://localhost:3000/dashboard/earner/credential/1"}
-                >
+                <TelegramShareButton url={link}>
                   <TelegramIcon size={50} round={true} />
                 </TelegramShareButton>
               </Tooltip>
             </Box>
             <Box sx={{ m: 0.5 }}>
               <Tooltip title="email">
-                <EmailShareButton
-                  url={"http://localhost:3000/dashboard/earner/credential/1"}
-                >
+                <EmailShareButton url={link}>
                   <EmailIcon size={50} round={true} />
                 </EmailShareButton>
               </Tooltip>
@@ -143,7 +127,7 @@ export default function ShareButton(props) {
               }}
             >
               <Typography noWrap id="url" variant="body2">
-                {"http://localhost:3000/dashboard/earner/credential/1"}
+                {link}
               </Typography>
             </Box>
             <Box sx={{ m: 1 }}>

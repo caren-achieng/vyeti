@@ -11,6 +11,7 @@ import Navbar from "../../../../components/layout/Navbar";
 
 import ArchiveIcon from "@mui/icons-material/Archive";
 import DashboardButton from "../../../../components/util/DashboardButton";
+import EditProgramme from "../../../../components/programme/EditProgramme";
 
 export default function Programme({ programme }) {
   return (
@@ -46,10 +47,7 @@ export default function Programme({ programme }) {
       </Box>
       <ProgrammeDetails programme={programme} />
       <Container maxWidth="md">
-        <Button variant="outlined" sx={{ m: 2 }}>
-          {" "}
-          Edit Details
-        </Button>
+        <EditProgramme programme={programme} />
       </Container>
     </div>
   );

@@ -11,8 +11,11 @@ export default async function handler(req, res) {
 
   if (method === "GET") {
     try {
-      const credential = await Credential.findById(id);
-      res.status(200).json(credential);
+      const credential = await Credential.findOne({ tokenId: id }).populate(
+        "institution programme",
+        "_id institution_name programme_name"
+      );
+      res.status(200).json({ credential });
     } catch (err) {
       res.status(500).json(err);
     }
