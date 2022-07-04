@@ -27,20 +27,39 @@ export default function Organization({ provider, programmes }) {
         <Box sx={{ mt: 3 }}>
           <Box sx={{ m: 1 }}>
             <Box sx={{ display: "flex", m: 2 }}>
-              <Avatar variant="rounded" sx={{ width: 110, height: 110 }} />
+              {provider.profile_img ? (
+                <img src={provider.profile_img} style={{ width: 150 }} />
+              ) : (
+                <Avatar variant="rounded" sx={{ width: 110, height: 110 }} />
+              )}
             </Box>
             <Typography variant="h4" sx={{ m: 1 }}>
               {provider.institution_name}
             </Typography>
             <Typography variant="body1" sx={{ m: 1 }}>
-              Strathmore University Nairobi Kenya Headline Lorem ipsum dolor sit
-              amet, consectetur adipiscing elit
+              {provider.headline}
             </Typography>
             <Box sx={{ m: 1 }}>
-              <LinkedInIcon color="primary" sx={{ mr: 1 }} />
-              <FacebookIcon color="primary" sx={{ mr: 1 }} />
-              <TwitterIcon color="primary" sx={{ mr: 1 }} />
-              <LanguageIcon color="primary" sx={{ mr: 1 }} />
+              {provider.links?.linkedIn ? (
+                <Link href={provider.links.linkedIn} passHref={true}>
+                  <LinkedInIcon color="primary" sx={{ mr: 1 }} />
+                </Link>
+              ) : null}
+              {provider.links?.facebook ? (
+                <Link href={provider.links.facebook} passHref={true}>
+                  <FacebookIcon color="primary" sx={{ mr: 1 }} />
+                </Link>
+              ) : null}
+              {provider.links?.twitter ? (
+                <Link href={provider.links.twitter} passHref={true}>
+                  <TwitterIcon color="primary" sx={{ mr: 1 }} />
+                </Link>
+              ) : null}
+              {provider.links?.webUrl ? (
+                <Link href={provider.links.webUrl} passHref={true}>
+                  <LanguageIcon color="primary" sx={{ mr: 1 }} />
+                </Link>
+              ) : null}
             </Box>
             <Box sx={{ display: "flex", m: 1 }}>
               <Typography
@@ -73,13 +92,7 @@ export default function Organization({ provider, programmes }) {
               About
             </Typography>
             <Typography variant="body1" sx={{ m: 2 }}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
+              {provider.description}
             </Typography>
           </Paper>
         </Box>

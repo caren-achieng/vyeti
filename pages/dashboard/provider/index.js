@@ -28,6 +28,7 @@ import CreateProgramme from "../../../components/programme/CreateProgramme";
 import ProgrammeList from "../../../components/programme/ProgrammeList";
 
 import jwt from "jsonwebtoken";
+import ProviderProfile from "../../../components/provider/ProviderProfile";
 
 const drawerWidth = 240;
 
@@ -97,8 +98,8 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const buttonsinfo = [
-  { text: "Programmes", link: "/campaigns", value: 0 },
-  { text: "Institution", link: "/contacts", value: 1 },
+  { text: "Institution Profile", link: "/campaigns", value: 0 },
+  { text: "Programmes", link: "/contacts", value: 1 },
   { text: "Messages", link: "/messages", value: 2 },
 ];
 
@@ -166,11 +167,11 @@ export default function ProviderDashboard({ provider, programmes }) {
               >
                 <ListItemIcon>
                   {index === 0 ? (
-                    <SchoolIcon
+                    <AccountBalanceIcon
                       color={index === value ? "primary" : "inherit"}
                     />
                   ) : index === 1 ? (
-                    <AccountBalanceIcon
+                    <SchoolIcon
                       color={index === value ? "primary" : "inherit"}
                     />
                   ) : index === 2 ? (
@@ -191,13 +192,13 @@ export default function ProviderDashboard({ provider, programmes }) {
 
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
-          {provider ? (
-            <div hidden={value !== 0}>
-              <CreateProgramme providerId={provider._id} />
-              <ProgrammeList programmes={programmes} />
-            </div>
-          ) : null}
-          <div hidden={value !== 1}>Institution</div>
+          <div hidden={value !== 0}>
+            <ProviderProfile provider={provider} />
+          </div>
+          <div hidden={value !== 1}>
+            <CreateProgramme providerId={provider._id} />
+            <ProgrammeList programmes={programmes} />
+          </div>
           <div hidden={value !== 2}>Messages</div>
           <div hidden={value !== 3}>Sth</div>
           <div hidden={value !== 4}>Archived</div>
