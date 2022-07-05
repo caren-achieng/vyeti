@@ -4,10 +4,6 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import LanguageIcon from "@mui/icons-material/Language";
 
 import VerifiedIcon from "@mui/icons-material/Verified";
 import EditProvider from "./EditProvider";

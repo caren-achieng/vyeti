@@ -16,17 +16,15 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import SchoolIcon from "@mui/icons-material/School";
+import ApartmentIcon from "@mui/icons-material/Apartment";
 import ClassIcon from "@mui/icons-material/Class";
 import ArchiveIcon from "@mui/icons-material/Archive";
+import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 
-import CreateProgramme from "../../../components/programme/CreateProgramme";
-import ProgrammeList from "../../../components/programme/ProgrammeList";
+import EmployerProfile from "../../../components/employer/EmployerProfile";
+import DataTable from "../../../components/registry/DataTable";
 
 import jwt from "jsonwebtoken";
-import ProviderProfile from "../../../components/provider/ProviderProfile";
-
 import {
   AppBar,
   Drawer,
@@ -34,12 +32,12 @@ import {
 } from "../../../components/util/NavDrawerOptions";
 
 const buttonsinfo = [
-  { text: "Institution Profile", link: "/campaigns", value: 0 },
-  { text: "Programmes", link: "/contacts", value: 1 },
+  { text: "Company Profile", link: "/campaigns", value: 0 },
+  { text: "Credentials Registry", link: "/contacts", value: 1 },
   { text: "Archived Items", link: "/messages", value: 2 },
 ];
 
-export default function ProviderDashboard({ provider, programmes }) {
+export default function EmloyerDashboard({ employer, credentials }) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(0);
@@ -103,11 +101,11 @@ export default function ProviderDashboard({ provider, programmes }) {
               >
                 <ListItemIcon>
                   {index === 0 ? (
-                    <AccountBalanceIcon
+                    <ApartmentIcon
                       color={index === value ? "primary" : "inherit"}
                     />
                   ) : index === 1 ? (
-                    <SchoolIcon
+                    <AppRegistrationIcon
                       color={index === value ? "primary" : "inherit"}
                     />
                   ) : index === 2 ? (
@@ -129,15 +127,13 @@ export default function ProviderDashboard({ provider, programmes }) {
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
           <div hidden={value !== 0}>
-            <ProviderProfile provider={provider} />
+            {" "}
+            <EmployerProfile employer={employer} />
           </div>
           <div hidden={value !== 1}>
-            <CreateProgramme providerId={provider._id} />
-            <ProgrammeList programmes={programmes} />
+            <DataTable credentials={credentials} />
           </div>
           <div hidden={value !== 2}>Archived Items</div>
-          <div hidden={value !== 3}>Sth</div>
-          <div hidden={value !== 4}>Archived</div>
         </Box>
       </Box>
     </div>
@@ -149,10 +145,10 @@ export const getServerSideProps = async ({ req }) => {
   const token = cookies.vyeti_jwt;
   const decoded_token = jwt.decode(token);
   const account_id = decoded_token.id;
-  if (decoded_token.type === "employer") {
+  if (decoded_token.type === "provider") {
     return {
       redirect: {
-        destination: "/dashboard/employer",
+        destination: "/dashboard/provider",
         permanent: false,
       },
     };
@@ -165,17 +161,21 @@ export const getServerSideProps = async ({ req }) => {
     };
   } else {
     const account = await axios.get(
-      `http://localhost:3000/api/providers/account/${account_id}`
+      `http://localhost:3000/api/employers/account/${account_id}`
     );
-    const providerId = account.data.provider._id;
+    const employerId = account.data.employer._id;
 
     const res = await axios.get(
-      `http://localhost:3000/api/providers/${providerId}`
+      `http://localhost:3000/api/employers/${employerId}`
     );
+    const credentials = await axios.get(
+      `http://localhost:3000/api/credentials`
+    );
+
     return {
       props: {
-        provider: res.data.provider,
-        programmes: res.data.programmes,
+        employer: res.data.employer,
+        credentials: credentials.data.credentials,
       },
     };
   }
