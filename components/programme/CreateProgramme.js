@@ -11,6 +11,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 import AddIcon from "@mui/icons-material/Add";
 
@@ -19,6 +23,8 @@ export default function CreateProgramme({ providerId }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState([]);
+  const [value, setValue] = useState(4);
+  const [measure, setMeasure] = useState("years");
 
   const router = useRouter();
 
@@ -38,6 +44,10 @@ export default function CreateProgramme({ providerId }) {
         provider: provider_id,
         programme_name: name,
         description: description,
+        duration: {
+          quantity: value,
+          measure: measure,
+        },
       };
       const res = await axios.post(`/api/programmes`, newProgramme);
       const programme = res.data;
@@ -66,7 +76,7 @@ export default function CreateProgramme({ providerId }) {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            id="programme name"
             label="Programme name"
             fullWidth
             variant="filled"
@@ -79,7 +89,7 @@ export default function CreateProgramme({ providerId }) {
 
           <Box sx={{ m: 2 }} />
           <TextField
-            id="filled-multiline-static"
+            id="description"
             label="Description"
             multiline
             rows={8}
@@ -91,6 +101,32 @@ export default function CreateProgramme({ providerId }) {
           <Typography variant="caption" sx={{ color: "red" }}>
             {errors?.description?.message}
           </Typography>
+
+          <Box sx={{ m: 2 }} />
+          <TextField
+            id="time-quantity"
+            label="Duration"
+            variant="filled"
+            required
+            onChange={(e) => setValue(e.target.value)}
+          />
+          <Typography variant="caption" sx={{ color: "red" }}>
+            {errors?.quantity?.message}
+          </Typography>
+          <FormControl variant="filled" sx={{ ml: 1 }}>
+            <InputLabel id="measure-label">measure</InputLabel>
+            <Select
+              labelId="measure-label"
+              id="measure"
+              value={measure}
+              label="measure"
+              onChange={(e) => setMeasure(e.target.value)}
+            >
+              <MenuItem value={"days"}>days</MenuItem>
+              <MenuItem value={"months"}>months</MenuItem>
+              <MenuItem value={"years"}>Years</MenuItem>
+            </Select>
+          </FormControl>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>

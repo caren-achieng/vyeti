@@ -9,12 +9,11 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import Grid from "@mui/material/Grid";
-import Fab from "@mui/material/Fab";
+import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Slide from "@mui/material/Slide";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Web3Modal from "web3modal";
@@ -32,12 +31,13 @@ const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
 import { credentialsRegistryAddress } from "../../config";
 import CredentialRegistry from "../../artifacts/contracts/CredentialsRegistry.sol/CredentialsRegistry.json";
+import { getAccordionDetailsUtilityClass } from "@mui/material";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function CreateCredential({ providerId, programmeId }) {
+export default function CreateCredential({ registrantId }) {
   const [open, setOpen] = useState(false);
   const [fileUrl, setFileUrl] = useState(null);
   const [title, setTitle] = useState("");
@@ -46,6 +46,8 @@ export default function CreateCredential({ providerId, programmeId }) {
   const [description, setDescription] = useState("");
   const [signatures, setSignatures] = useState([]);
   const [noOfsignatures, setNoOfsignatures] = useState(1);
+  const [programmeId, setProgrammeId] = useState("");
+  const [providerId, setProviderId] = useState("");
   const [activeStep, setActiveStep] = useState(0);
   const [next, setNext] = useState(false);
   const [finish, setFinish] = useState(false);
@@ -59,8 +61,21 @@ export default function CreateCredential({ providerId, programmeId }) {
     }
   }, [title, fullname, email, description]);
 
+  async function getDetails() {
+    const res = await axios.get(`/api/registrants/${registrantId}`);
+    const details = res.data.registrant;
+    setTitle(details.programme?.programme_name);
+    setProgrammeId(details.programme?._id);
+    setProviderId(details.institution?._id);
+    setFullName(details.fullname);
+    setEmail(details.email);
+    console.log(details.email);
+    console.log(registrantId);
+  }
+
   const handleClickOpen = () => {
     setOpen(true);
+    getDetails();
   };
 
   const handleClose = () => {
@@ -170,15 +185,14 @@ export default function CreateCredential({ providerId, programmeId }) {
 
   return (
     <div>
-      <Tooltip title="Issue Credential">
-        <Fab
+      <Tooltip title="Award Credential">
+        <IconButton
           onClick={handleClickOpen}
-          aria-label="Issue"
+          aria-label="Award"
           color="primary"
-          sx={{ m: 2 }}
         >
           <NoteAddIcon />
-        </Fab>
+        </IconButton>
       </Tooltip>
       <Dialog
         fullScreen
@@ -201,7 +215,7 @@ export default function CreateCredential({ providerId, programmeId }) {
             <Grid align="center">
               <Typography variant="h6" sx={{ m: 1 }}>
                 {" "}
-                Issue Credential
+                Award Credential
               </Typography>
             </Grid>
             <Steps

@@ -127,7 +127,7 @@ export default function EditProvider({ provider }) {
             rows={6}
             fullWidth
             variant="filled"
-            placeholder="An more detailed description: 500 characters max"
+            placeholder="A more detailed description: 500 characters max"
             required
             onChange={(e) => setDescription(e.target.value)}
             value={description}

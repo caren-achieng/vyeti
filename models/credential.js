@@ -19,6 +19,10 @@ const credentialSchema = new mongoose.Schema(
       type: ObjectId,
       ref: "Provider",
     },
+    registrant: {
+      type: ObjectId,
+      ref: "Registrant",
+    },
     issued_to: {
       name: {
         type: String,

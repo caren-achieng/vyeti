@@ -21,6 +21,16 @@ const programmeSchema = new mongoose.Schema(
       type: ObjectId,
       ref: "Provider",
     },
+    duration: {
+      quantity: {
+        type: Number,
+        required: [true, "Programme duration is required"],
+      },
+      measure: {
+        type: String,
+        required: [true, "Programme duration is required"],
+      },
+    },
   },
   { timestamps: true }
 );

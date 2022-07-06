@@ -1,5 +1,6 @@
 import dbConnect from "../../../lib/dbConnect";
 import Programme from "../../../models/programme";
+import Registrant from "../../../models/registrant";
 
 export default async function handler(req, res) {
   const {
@@ -15,7 +16,13 @@ export default async function handler(req, res) {
         "provider",
         "_id institution_name slug"
       );
-      res.status(200).json({ programme });
+      const registrants = await Registrant.find({ programme: id })
+        .populate(
+          "institution programme",
+          "_id institution_name programme_name"
+        )
+        .sort("-createdAt");
+      res.status(200).json({ programme, registrants });
     } catch (err) {
       res.status(500).json(err);
     }

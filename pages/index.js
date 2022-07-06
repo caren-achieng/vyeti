@@ -39,8 +39,8 @@ export default function Home() {
               Carrer
             </Typography>
             <Typography variant="body1" sx={{ mt: 2 }}>
-              subtitle1. Lorem ipsum dolor sit amet, consectetur adipisicing
-              elit. Quos blanditiis tenetur
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
+              blanditiis tenetur
             </Typography>
             {talkingpoints.map((points, index) => (
               <Box

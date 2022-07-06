@@ -27,7 +27,6 @@ export default function CredentialForm(props) {
             fullWidth
             sx={{ m: 1 }}
             value={props.fullname}
-            onChange={(e) => props.setFullName(e.target.value)}
           />
         </Grid>
 
