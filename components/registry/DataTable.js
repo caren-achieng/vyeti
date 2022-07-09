@@ -1,12 +1,14 @@
 import React from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import dayjs from "dayjs";
 
 const columns = [
-  { headerName: "ID", field: "id", width: 200 },
+  { headerName: "ID", field: "id", width: 120 },
   { headerName: "Title", field: "title", width: 200 },
   { headerName: "Issued to", field: "issued_to", width: 200 },
   { headerName: "Programme", field: "programme", width: 200 },
   { headerName: "Institution", field: "institution", width: 200 },
+  { headerName: "Date Issued", field: "date", width: 150 },
   { headerName: "Token ID", field: "tokenId", width: 100 },
   {
     field: "link",
@@ -29,10 +31,11 @@ function createData(
   issued_to,
   programme,
   institution,
+  date,
   tokenId,
   link
 ) {
-  return { id, title, issued_to, programme, institution, tokenId, link };
+  return { id, title, issued_to, programme, institution, date, tokenId, link };
 }
 
 export default function DataTable({ credentials }) {
@@ -43,6 +46,7 @@ export default function DataTable({ credentials }) {
       credential.issued_to.name,
       credential.programme.programme_name,
       credential.institution.institution_name,
+      dayjs(credential.createdAt).format("MMMM DD YYYY"),
       credential.tokenId,
       credential.tokenId
     )

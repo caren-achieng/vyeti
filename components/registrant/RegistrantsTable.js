@@ -1,6 +1,7 @@
 import React from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import CreateCredential from "../credential/CreateCredential";
+import dayjs from "dayjs";
 
 const columns = [
   {
@@ -64,10 +65,10 @@ export default function RegistrantsTable({ registrants }) {
       registrant.admission_no,
       registrant.email,
       registrant.phone,
-      registrant.enrollment_date,
-      registrant.expected_completion,
+      dayjs(registrant.enrollment_date).format("MMMM DD YYYY"),
+      dayjs(registrant.expected_completion).format("MMMM DD YYYY"),
       registrant.completion_date,
-      registrant.date_of_birth,
+      dayjs(registrant.date_of_birth).format("MMMM DD YYYY"),
       registrant.birth_certificate,
       registrant.national_id,
       registrant.passport_no

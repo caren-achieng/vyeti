@@ -16,6 +16,10 @@ const accountSchema = new mongoose.Schema(
       required: [true, "Please connect your account with your wallet"],
       unique: true,
     },
+    is_verified: {
+      type: Boolean,
+      default: false,
+    },
     type: {
       type: String,
       required: [true, "Account type is required"],

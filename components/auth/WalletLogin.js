@@ -1,14 +1,12 @@
 import axios from "axios";
 import jwt from "jsonwebtoken";
-import React from "react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import Button from "@mui/material/Button";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
 import providerOptions from "../../lib/providerOptions";
+import PopUpAlert from "../util/PopUpAlert";
 
 export default function WalletLogin() {
   const [message, setMessage] = useState("");
@@ -20,13 +18,6 @@ export default function WalletLogin() {
     setOpen(true);
   };
 
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
   const loginWithWallet = async () => {
     try {
       const web3Modal = new Web3Modal({ providerOptions });
@@ -44,7 +35,7 @@ export default function WalletLogin() {
       console.log(account);
       setSuccess(true);
       handleOpen();
-      setMessage("Log in Success ");
+      setMessage("Success! Logging you in... ");
       if (account.type === "provider") {
         router.push("/dashboard/provider");
       }
@@ -73,16 +64,12 @@ export default function WalletLogin() {
       >
         Log in with Wallet
       </Button>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert
-          onClose={handleClose}
-          severity={success ? "success" : "error"}
-          sx={{ width: "100%" }}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        >
-          {message}
-        </Alert>
-      </Snackbar>
+      <PopUpAlert
+        open={open}
+        success={success}
+        message={message}
+        setOpen={setOpen}
+      />
     </div>
   );
 }

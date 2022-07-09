@@ -20,6 +20,7 @@ export default async function (req, res) {
           exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // 30 days
           wallet: account.wallet,
           type: account.type,
+          verified: account.is_verified,
           id: account.id,
         },
         secret

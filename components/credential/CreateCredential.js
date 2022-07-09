@@ -1,6 +1,6 @@
 import Head from "next/head";
 import axios from "axios";
-import { useEffect, useState, forwardRef } from "react";
+import { useEffect, useState, forwardRef, Fragment } from "react";
 import { ethers } from "ethers";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 import Container from "@mui/material/Container";
@@ -23,6 +23,7 @@ import Steps from "../../components/layout/Steps";
 import AddSignature from "../../components/util/AddSignature";
 import NextButton from "../../components/util/NextButton";
 import FinishButton from "../../components/util/FinishButton";
+import PopUpAlert from "../util/PopUpAlert";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
@@ -51,6 +52,9 @@ export default function CreateCredential({ registrantId }) {
   const [activeStep, setActiveStep] = useState(0);
   const [next, setNext] = useState(false);
   const [finish, setFinish] = useState(false);
+  const [alert, setAlert] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [message, setMessage] = useState("");
   const [errors, setErrors] = useState([]);
 
   useEffect(() => {
@@ -69,8 +73,14 @@ export default function CreateCredential({ registrantId }) {
     setProviderId(details.institution?._id);
     setFullName(details.fullname);
     setEmail(details.email);
-    console.log(details.email);
-    console.log(registrantId);
+    const expetedDate = details.expected_completion;
+    const currentDate = new Date().toISOString();
+    if (expetedDate > currentDate) {
+      setSuccess(false);
+      setMessage("Cannot Isssue Credential Before Expected Completion Time");
+      setAlert(true);
+      setOpen(false);
+    }
   }
 
   const handleClickOpen = () => {
@@ -156,6 +166,7 @@ export default function CreateCredential({ registrantId }) {
           tokenId: tokenId,
           programme: programmeId,
           institution: providerId,
+          registrant: registrantId,
           title: title,
           issued_to: {
             name: fullname,
@@ -164,7 +175,7 @@ export default function CreateCredential({ registrantId }) {
           image: fileUrl,
         };
         await axios.post(`/api/credentials`, data);
-        await axios.post(`/api/mails/credentials`, data);
+        //await axios.post(`/api/mails/credentials`, data);
         setOpen(false);
         setTitle("");
         setFullName("");
@@ -175,6 +186,9 @@ export default function CreateCredential({ registrantId }) {
         setActiveStep(0);
         setFileUrl(null);
         setNoOfsignatures(1);
+        setSuccess(true);
+        setMessage("Credential Issued Successfully");
+        setAlert(true);
       }
 
       console.log("Success", event);
@@ -276,6 +290,14 @@ export default function CreateCredential({ registrantId }) {
           </Container>
         </DialogContent>
       </Dialog>
+      <Fragment>
+        <PopUpAlert
+          open={alert}
+          success={success}
+          message={message}
+          setOpen={setAlert}
+        />
+      </Fragment>
     </div>
   );
 }

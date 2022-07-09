@@ -111,7 +111,7 @@ export default function CreateProgramme({ providerId }) {
             onChange={(e) => setValue(e.target.value)}
           />
           <Typography variant="caption" sx={{ color: "red" }}>
-            {errors?.quantity?.message}
+            {errors?.duration?.message}
           </Typography>
           <FormControl variant="filled" sx={{ ml: 1 }}>
             <InputLabel id="measure-label">measure</InputLabel>

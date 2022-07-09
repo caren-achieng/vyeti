@@ -20,6 +20,7 @@ import Fab from "@mui/material/Fab";
 
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import BasicDatePicker from "../util/BasicDatePicker";
+import PopUpAlert from "../util/PopUpAlert";
 
 export default function createRegistrant({ providerId, programmeId }) {
   const [open, setOpen] = useState(false);
@@ -34,7 +35,9 @@ export default function createRegistrant({ providerId, programmeId }) {
   const [birthCert, setBirthCert] = useState("");
   const [passport, setPassport] = useState("");
   const [nationalId, setNationalId] = useState("");
-
+  const [alert, setAlert] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [message, setMessage] = useState("");
   const [errors, setErrors] = useState([]);
 
   const router = useRouter();
@@ -66,6 +69,9 @@ export default function createRegistrant({ providerId, programmeId }) {
         programme: programmeId,
       };
       await axios.post(`/api/registrants`, details);
+      setSuccess(true);
+      setMessage("Registration successful");
+      setAlert(true);
       router.replace(router.asPath);
       setOpen(false);
     } catch (err) {
@@ -173,6 +179,7 @@ export default function createRegistrant({ providerId, programmeId }) {
             <Typography variant="body1" sx={{ ml: 2, mt: 2, mb: -1 }}>
               Personal Identification Documents
             </Typography>
+
             <Grid item xs={12} sm={12} md={12}>
               <TextField
                 autoFocus
@@ -181,7 +188,6 @@ export default function createRegistrant({ providerId, programmeId }) {
                 label="Birth Certificate No"
                 fullWidth
                 variant="filled"
-                required
                 onChange={(e) => setBirthCert(e.target.value)}
                 value={birthCert}
               />
@@ -194,7 +200,6 @@ export default function createRegistrant({ providerId, programmeId }) {
                 label="National ID No"
                 fullWidth
                 variant="filled"
-                required
                 onChange={(e) => setNationalId(e.target.value)}
                 value={nationalId}
               />
@@ -207,7 +212,6 @@ export default function createRegistrant({ providerId, programmeId }) {
                 label="Passport No"
                 fullWidth
                 variant="filled"
-                required
                 onChange={(e) => setPassport(e.target.value)}
                 value={passport}
               />
@@ -223,7 +227,6 @@ export default function createRegistrant({ providerId, programmeId }) {
                 label="Admission No"
                 fullWidth
                 variant="filled"
-                required
                 onChange={(e) => setAdmission(e.target.value)}
                 value={admission}
               />
@@ -263,6 +266,12 @@ export default function createRegistrant({ providerId, programmeId }) {
           <Button onClick={saveDetails}>Register</Button>
         </DialogActions>
       </Dialog>
+      <PopUpAlert
+        open={alert}
+        success={success}
+        message={message}
+        setOpen={setAlert}
+      />
     </div>
   );
 }

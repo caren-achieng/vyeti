@@ -16,15 +16,19 @@ import Steps from "../../components/layout/Steps";
 import ErrorDisplay from "../../components/util/ErrorDisplay";
 import FinishButton from "../../components/util/FinishButton";
 import SuccessDisplay from "../../components/util/SuccessDisplay";
+import PopUpAlert from "../../components/util/PopUpAlert";
 
 export default function Earner() {
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [walletaddress, setWalletAddress] = useState("");
+  const [message, setMessage] = useState("");
   const [activeStep, setActiveStep] = useState(0);
   const [next, setNext] = useState(false);
   const [finish, setFinish] = useState(false);
+  const [alert, setAlert] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState([]);
   const router = useRouter();
 
@@ -65,6 +69,9 @@ export default function Earner() {
       };
       const res = await axios.post("/api/earners", data);
       if (res) {
+        setSuccess(true);
+        setAlert(true);
+        setMessage("Account created successfully");
         router.push("/dashboard/earner");
       }
     } catch (err) {
@@ -133,6 +140,12 @@ export default function Earner() {
           </Container>
         </Grid>
       </Grid>
+      <PopUpAlert
+        open={alert}
+        success={success}
+        message={message}
+        setOpen={setAlert}
+      />
     </div>
   );
 }

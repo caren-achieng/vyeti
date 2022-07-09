@@ -2,8 +2,9 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import dayjs from "dayjs";
 
-export default function Credential({ credential }) {
+export default function Credential({ credential, data }) {
   const signatures = credential.signatures;
   return (
     <Grid container sx={{ mt: 3, ml: 4, mr: 4, mb: 0 }}>
@@ -22,9 +23,12 @@ export default function Credential({ credential }) {
               Issued by
             </Typography>
             <Typography variant="body1" sx={{ m: 1, ml: 0 }}>
-              {credential.issuer}
+              {data.institution.institution_name}
             </Typography>
           </Box>
+          <Typography variant="body1" sx={{ ml: 1 }}>
+            {dayjs(data.createdAt).format("MMMM DD YYYY")}
+          </Typography>
           <Box sx={{ display: "flex" }}>
             <Typography variant="body1" sx={{ fontWeight: 600, m: 1 }}>
               Issued to
