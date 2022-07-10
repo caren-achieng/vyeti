@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
 import TabPanel from "../../../components/util/TabPanel";
 import { useState } from "react";
 import axios from "axios";
@@ -11,6 +12,7 @@ import jwt from "jsonwebtoken";
 import CredentialCard from "../../../components/credential/CredentialCard";
 import Navbar from "../../../components/layout/Navbar";
 import EarnerProfile from "../../../components/earner/EarnerProfile";
+import SubtitlesOffIcon from "@mui/icons-material/SubtitlesOff";
 
 function a11yProps(index) {
   return {
@@ -63,6 +65,17 @@ export default function Earner({ earner, credentials }) {
                   />
                 ))}
             </Grid>
+            {credentials.length === 0 ? (
+              <Container align="center">
+                <Box sx={{ mt: 6 }}>
+                  <SubtitlesOffIcon sx={{ color: "#e0e0e0", fontSize: 60 }} />
+                  <Box sx={{ m: 1 }} />
+                  <Typography variant="caption" color="text.secondary">
+                    You are Yet to Receive a Credential
+                  </Typography>
+                </Box>
+              </Container>
+            ) : null}
           </Grid>
         </Container>
       </TabPanel>

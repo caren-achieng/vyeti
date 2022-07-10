@@ -7,16 +7,13 @@ import Web3Modal from "web3modal";
 import Button from "@mui/material/Button";
 import providerOptions from "../../lib/providerOptions";
 import PopUpAlert from "../util/PopUpAlert";
+import Cookies from "js-cookie";
 
 export default function WalletLogin() {
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
 
   const loginWithWallet = async () => {
     try {
@@ -32,9 +29,9 @@ export default function WalletLogin() {
       const res = await axios.post("/api/auth/login", credentials);
       const token = res.data.token;
       const account = jwt.decode(token);
-      console.log(account);
+      Cookies.set("authenticated", true, { expires: 30 });
       setSuccess(true);
-      handleOpen();
+      setOpen(true);
       setMessage("Success! Logging you in... ");
       if (account.type === "provider") {
         router.push("/dashboard/provider");
@@ -48,7 +45,7 @@ export default function WalletLogin() {
     } catch (err) {
       console.log(err);
       setSuccess(false);
-      handleOpen();
+      setOpen(true);
       setMessage(
         "No account exists with that address: Register to create account "
       );
