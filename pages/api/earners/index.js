@@ -3,6 +3,7 @@ import { serialize } from "cookie";
 import dbConnect from "../../../lib/dbConnect";
 import Earner from "../../../models/earner";
 import Account from "../../../models/account";
+import { randomBytes } from "crypto";
 
 const secret = process.env.JWT_SECRET;
 
@@ -36,6 +37,7 @@ export default async function handler(req, res) {
               email: req.body.email,
               wallet: req.body.wallet,
               type: accountType,
+              verification_token: randomBytes(32).toString("hex"),
             });
 
             const accountId = account._id;
@@ -59,7 +61,7 @@ export default async function handler(req, res) {
             const serialised = serialize("vyeti_jwt", token, {
               httpOnly: true,
               secure: process.env.NODE_ENV !== "development",
-              sameSite: "strict",
+              //sameSite: "strict",
               maxAge: 60 * 60 * 24 * 30,
               path: "/",
             });

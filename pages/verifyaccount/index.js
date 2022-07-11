@@ -8,23 +8,27 @@ import Typography from "@mui/material/Typography";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import jwt from "jsonwebtoken";
-import WalletLogin from "../components/auth/WalletLogin";
-import SideSection from "../components/layout/SideSection";
+import WalletLogin from "../../components/auth/WalletLogin";
+import SideSection from "../../components/layout/SideSection";
+import PopUpAlert from "../../components/util/PopUpAlert";
 
-export default function VerifyAccount({ email }) {
+export default function VerifyAccount({ email, token }) {
   const [errors, setErrors] = useState([]);
-  useEffect(() => {
-    sendVerification();
-  }, [email]);
+  const [alert, setAlert] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-  const resendEmail = async (e) => {
-    e.preventDefault();
+  const resendEmail = async () => {
     sendVerification();
   };
 
   const sendVerification = async () => {
     try {
+      const data = {
+        email: email,
+      };
       await axios.post(`/api/mails/verification`, data);
+      setSuccess(true);
+      setAlert(true);
     } catch (err) {
       console.log(err);
       setErrors(err);
@@ -65,6 +69,12 @@ export default function VerifyAccount({ email }) {
           </Container>
         </Grid>
       </Grid>
+      <PopUpAlert
+        open={alert}
+        success={success}
+        message={`Verification email has been resent to ${email}`}
+        setOpen={setAlert}
+      />
     </div>
   );
 }
@@ -77,30 +87,12 @@ export const getServerSideProps = async ({ req }) => {
   const verified = decoded_token.verified;
 
   if (verified) {
-    if (decoded_token.type === "employer") {
-      return {
-        redirect: {
-          destination: "/dashboard/employer",
-          permanent: false,
-        },
-      };
-    }
-    if (decoded_token.type === "employer") {
-      return {
-        redirect: {
-          destination: "/dashboard/employer",
-          permanent: false,
-        },
-      };
-    }
-    if (decoded_token.type === "provider") {
-      return {
-        redirect: {
-          destination: "/dashboard/provider",
-          permanent: false,
-        },
-      };
-    }
+    return {
+      redirect: {
+        destination: "/dashboard/employer",
+        permanent: false,
+      },
+    };
   } else {
     const res = await axios.get(
       `http://localhost:3000/api/accounts/${account_id}`

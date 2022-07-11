@@ -28,6 +28,7 @@ const accountSchema = new mongoose.Schema(
         message: "Account type is not recognized",
       },
     },
+    verification_token: String,
   },
   { timestamps: true }
 );

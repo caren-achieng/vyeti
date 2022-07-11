@@ -26,6 +26,7 @@
     "bcryptjs": "^2.4.3",
     "cookie": "^0.5.0",
     "cookies-next": "^2.0.4",
+    "crypto": "^1.0.1",
     "date-fns": "^2.28.0",
     "dayjs": "^1.11.3",
     "ipfs-http-client": "^57.0.1",

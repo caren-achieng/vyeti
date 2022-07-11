@@ -69,6 +69,7 @@ export default function Earner() {
       };
       const res = await axios.post("/api/earners", data);
       if (res) {
+        await axios.post(`/api/mails/verification`, data);
         setSuccess(true);
         setAlert(true);
         setMessage("Account created successfully");

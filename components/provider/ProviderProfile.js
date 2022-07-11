@@ -7,6 +7,8 @@ import Typography from "@mui/material/Typography";
 
 import VerifiedIcon from "@mui/icons-material/Verified";
 import EditProvider from "./EditProvider";
+import Accredit from "./Accredit";
+import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 
 export default function ProviderProfile({ provider }) {
   return (
@@ -23,6 +25,23 @@ export default function ProviderProfile({ provider }) {
           <Typography variant="h4" sx={{ m: 1 }}>
             {provider.institution_name}
           </Typography>
+          {provider.is_accredited ? null : (
+            <Box sx={{ display: "flex" }}>
+              <ReportGmailerrorredIcon
+                sx={{ ml: 1, mt: 0.7, color: "#616161" }}
+              />
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ ml: 0.4, mt: 1 }}
+              >
+                Proof of Accreditation is Required
+              </Typography>
+              <Box sx={{ ml: 0.9, mt: -0.8 }}>
+                <Accredit />
+              </Box>
+            </Box>
+          )}
           {provider.headline ? (
             <Typography variant="body1" sx={{ m: 1 }}>
               {provider.headline}

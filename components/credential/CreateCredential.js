@@ -49,6 +49,7 @@ export default function CreateCredential({ registrantId }) {
   const [noOfsignatures, setNoOfsignatures] = useState(1);
   const [programmeId, setProgrammeId] = useState("");
   const [providerId, setProviderId] = useState("");
+  const [providerName, setProviderName] = useState("");
   const [activeStep, setActiveStep] = useState(0);
   const [next, setNext] = useState(false);
   const [finish, setFinish] = useState(false);
@@ -71,6 +72,7 @@ export default function CreateCredential({ registrantId }) {
     setTitle(details.programme?.programme_name);
     setProgrammeId(details.programme?._id);
     setProviderId(details.institution?._id);
+    setProviderName(details.institution?.institution_name);
     setFullName(details.fullname);
     setEmail(details.email);
     const expetedDate = details.expected_completion;
@@ -166,6 +168,7 @@ export default function CreateCredential({ registrantId }) {
           tokenId: tokenId,
           programme: programmeId,
           institution: providerId,
+          institutionName: providerName,
           registrant: registrantId,
           title: title,
           issued_to: {
@@ -173,9 +176,11 @@ export default function CreateCredential({ registrantId }) {
             email: email,
           },
           image: fileUrl,
+          description: description,
         };
+        console.log(data);
         await axios.post(`/api/credentials`, data);
-        //await axios.post(`/api/mails/credentials`, data);
+        await axios.post(`/api/mails/credentials`, data);
         setOpen(false);
         setTitle("");
         setFullName("");
