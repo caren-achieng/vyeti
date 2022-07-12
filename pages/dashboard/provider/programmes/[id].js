@@ -105,9 +105,7 @@ export default function Programme({ programme, registrants }) {
 }
 
 export const getServerSideProps = async ({ params }) => {
-  const res = await axios.get(
-    `http://localhost:3000/api/programmes/${params.id}`
-  );
+  const res = await axios.get(`https://vyeti.com/api/programmes/${params.id}`);
   return {
     props: {
       programme: res.data.programme,

@@ -176,12 +176,12 @@ export const getServerSideProps = async ({ req }) => {
     };
   } else {
     const account = await axios.get(
-      `http://localhost:3000/api/accounts/providers/${account_id}`
+      `https://vyeti.com/api/accounts/providers/${account_id}`
     );
     const providerId = account.data.provider._id;
 
     const res = await axios.get(
-      `http://localhost:3000/api/providers/${providerId}`
+      `https://vyeti.com/api/providers/${providerId}`
     );
     return {
       props: {
