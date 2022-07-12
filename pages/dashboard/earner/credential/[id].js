@@ -10,7 +10,7 @@ import { ethers } from "ethers";
 import axios from "axios";
 
 import { credentialsRegistryAddress } from "../../../../config";
-import CredentialRegistry from "../../lib/CredentialsRegistry.json";
+import CredentialRegistry from "../../../../lib/CredentialsRegistry.json";
 import Navbar from "../../../../components/layout/Navbar";
 import ShareButton from "../../../../components/util/ShareButton";
 import DashboardButton from "../../../../components/util/DashboardButton";
