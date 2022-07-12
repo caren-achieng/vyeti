@@ -22,7 +22,7 @@ import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import BasicDatePicker from "../util/BasicDatePicker";
 import PopUpAlert from "../util/PopUpAlert";
 
-export default function createRegistrant({ providerId, programmeId }) {
+export default function CreateRegistrant({ providerId, programmeId }) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");

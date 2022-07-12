@@ -44,8 +44,8 @@ export default function Credential({ credential, data }) {
           <Box sx={{ m: 4 }} />
           <Grid container spacing={2} sx={{ m: 1 }}>
             {signatures &&
-              signatures.map((signature) => (
-                <Grid item xs={12} sm={4} md={4}>
+              signatures.map((signature, index) => (
+                <Grid item xs={12} sm={4} md={4} key={index}>
                   <Box sx={{ height: 80, m: 2 }}>
                     <img src={signature.signature} alt="signature" />
                   </Box>

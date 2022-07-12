@@ -83,7 +83,7 @@ export default function CredentialPage({ tokenId, data }) {
       <Container maxWidth="lg">
         {credentials &&
           credentials.map((credential, index) => (
-            <Box>
+            <Box key={index}>
               <Credential credential={credential} data={data} key={index} />
               {!credential.claimed ? (
                 <Grid container>
