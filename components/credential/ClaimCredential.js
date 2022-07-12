@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import Button from "@mui/material/Button";
 import { credentialsRegistryAddress } from "../../config";
-import CredentialRegistry from "../../artifacts/contracts/CredentialsRegistry.sol/CredentialsRegistry.json";
+import CredentialRegistry from "../../lib/CredentialsRegistry.json";
 
 export default function ClaimCredential({ credentialId }) {
   async function handleClaim() {

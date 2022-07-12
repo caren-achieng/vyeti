@@ -31,8 +31,7 @@ import NoteAddIcon from "@mui/icons-material/NoteAdd";
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
 import { credentialsRegistryAddress } from "../../config";
-import CredentialRegistry from "../../artifacts/contracts/CredentialsRegistry.sol/CredentialsRegistry.json";
-import { getAccordionDetailsUtilityClass } from "@mui/material";
+import CredentialRegistry from "../../lib/CredentialsRegistry.json";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;

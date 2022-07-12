@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 
 import { credentialsRegistryAddress } from "../../config";
-import CredentialRegistry from "../../artifacts/contracts/CredentialsRegistry.sol/CredentialsRegistry.json";
+import CredentialRegistry from "../../lib/CredentialsRegistry.json";
 import Navbar from "../../components/layout/Navbar";
 import VerifyCredential from "../../components/credential/VerifyCredential";
 
