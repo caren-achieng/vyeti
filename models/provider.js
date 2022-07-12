@@ -101,7 +101,11 @@ const providerSchema = new mongoose.Schema(
     },
     documents: [
       {
-        file: {
+        file_url: {
+          type: String,
+          required: false,
+        },
+        file_type: {
           type: String,
           required: false,
         },

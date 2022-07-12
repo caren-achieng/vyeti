@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import axios from "axios";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -8,12 +9,16 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import Typography from "@mui/material/Typography";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
+import FileUpload from "../util/FileUpload";
 
-export default function Accredit() {
+export default function Accredit({ providerId }) {
   const [open, setOpen] = useState(false);
+  const [files, setFiles] = useState([]);
+  const [errors, setErrors] = useState([]);
   const router = useRouter();
 
   const handleClickOpen = () => {
@@ -24,20 +29,24 @@ export default function Accredit() {
     setOpen(false);
   };
 
-  const saveDetails = async (e) => {
+  const getFileDetails = (fileDetails) => {
+    setFiles([...files, fileDetails]);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const providerId = provider._id;
+    console.log(files);
     try {
       const details = {
         is_accredited: true,
-        documents: uploadedFiles,
+        documents: files,
       };
       await axios.put(`/api/providers/${providerId}`, details);
       router.replace(router.asPath);
       setOpen(false);
     } catch (err) {
       console.log(err);
-      setErrors(err.response.data.errors);
+      setErrors(err);
     }
   };
   return (
@@ -53,7 +62,19 @@ export default function Accredit() {
         </IconButton>
       </Tooltip>
       <Dialog fullWidth maxWidth="sm" open={open} onClose={handleClose}>
-        <DialogContent>Upload Documents</DialogContent>
+        <DialogTitle>Upload Accreditation Documents</DialogTitle>
+        <DialogContent>
+          <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+            *For Tertiary institutions, a Charter or Letter of Interim Authority
+            is Required
+          </Typography>
+          <Box>
+            <FileUpload getFileDetails={getFileDetails} />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleSubmit}>Submit</Button>
+        </DialogActions>
       </Dialog>
     </div>
   );

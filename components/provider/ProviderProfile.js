@@ -38,7 +38,7 @@ export default function ProviderProfile({ provider }) {
                 Proof of Accreditation is Required
               </Typography>
               <Box sx={{ ml: 0.9, mt: -0.8 }}>
-                <Accredit />
+                <Accredit providerId={provider._id} />
               </Box>
             </Box>
           )}

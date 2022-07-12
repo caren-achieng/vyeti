@@ -33,8 +33,9 @@ export default function ImageUpload({ setFileUrl, fileUrl }) {
             variant="rounded"
             src={fileUrl}
           />
-          <label htmlFor="fileInput">
-            <Tooltip title="change image file" placement="top">
+
+          <Tooltip title="change image file" placement="top">
+            <label htmlFor="file-input">
               <Fab
                 size="small"
                 color="primary"
@@ -43,13 +44,13 @@ export default function ImageUpload({ setFileUrl, fileUrl }) {
               >
                 <EditIcon />
               </Fab>
-            </Tooltip>
-          </label>
+            </label>
+          </Tooltip>
 
           <input
             type="file"
             accept="image/*"
-            id="fileInput"
+            id="file-input"
             hidden
             onChange={uploadImage}
           />

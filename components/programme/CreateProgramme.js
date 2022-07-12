@@ -52,7 +52,7 @@ export default function CreateProgramme({ providerId }) {
       const res = await axios.post(`/api/programmes`, newProgramme);
       const programme = res.data;
       setOpen(false);
-      router.push(`/dashboard/provider/programmes/${programme._id}`);
+      router.replace(router.asPath);
     } catch (err) {
       console.log(err);
       setErrors(err.response.data.errors);
