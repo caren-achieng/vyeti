@@ -1,5 +1,6 @@
 import Head from "next/head";
-import { useEffect, useState, forwardRef } from "react";
+import axios from "axios";
+import { useEffect, useState, forwardRef, Fragment } from "react";
 import { ethers } from "ethers";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 import Container from "@mui/material/Container";
@@ -8,12 +9,11 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import Grid from "@mui/material/Grid";
-import Fab from "@mui/material/Fab";
+import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Slide from "@mui/material/Slide";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Web3Modal from "web3modal";
@@ -23,6 +23,7 @@ import Steps from "../../components/layout/Steps";
 import AddSignature from "../../components/util/AddSignature";
 import NextButton from "../../components/util/NextButton";
 import FinishButton from "../../components/util/FinishButton";
+import PopUpAlert from "../util/PopUpAlert";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
@@ -30,13 +31,13 @@ import NoteAddIcon from "@mui/icons-material/NoteAdd";
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
 import { credentialsRegistryAddress } from "../../config";
-import CredentialRegistry from "../../artifacts/contracts/CredentialsRegistry.sol/CredentialsRegistry.json";
+import CredentialRegistry from "../../lib/CredentialsRegistry.json";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function CreateCredential() {
+export default function CreateCredential({ registrantId }) {
   const [open, setOpen] = useState(false);
   const [fileUrl, setFileUrl] = useState(null);
   const [title, setTitle] = useState("");
@@ -45,9 +46,15 @@ export default function CreateCredential() {
   const [description, setDescription] = useState("");
   const [signatures, setSignatures] = useState([]);
   const [noOfsignatures, setNoOfsignatures] = useState(1);
+  const [programmeId, setProgrammeId] = useState("");
+  const [providerId, setProviderId] = useState("");
+  const [providerName, setProviderName] = useState("");
   const [activeStep, setActiveStep] = useState(0);
   const [next, setNext] = useState(false);
   const [finish, setFinish] = useState(false);
+  const [alert, setAlert] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [message, setMessage] = useState("");
   const [errors, setErrors] = useState([]);
 
   useEffect(() => {
@@ -58,8 +65,28 @@ export default function CreateCredential() {
     }
   }, [title, fullname, email, description]);
 
+  async function getDetails() {
+    const res = await axios.get(`/api/registrants/${registrantId}`);
+    const details = res.data.registrant;
+    setTitle(details.programme?.programme_name);
+    setProgrammeId(details.programme?._id);
+    setProviderId(details.institution?._id);
+    setProviderName(details.institution?.institution_name);
+    setFullName(details.fullname);
+    setEmail(details.email);
+    const expetedDate = details.expected_completion;
+    const currentDate = new Date().toISOString();
+    if (expetedDate > currentDate) {
+      setSuccess(false);
+      setMessage("Cannot Isssue Credential Before Expected Completion Time");
+      setAlert(true);
+      setOpen(false);
+    }
+  }
+
   const handleClickOpen = () => {
     setOpen(true);
+    getDetails();
   };
 
   const handleClose = () => {
@@ -116,36 +143,74 @@ export default function CreateCredential() {
   }
 
   async function CreateCredential() {
-    const url = await uploadToIPFS();
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
+    try {
+      const url = await uploadToIPFS();
 
-    let contract = new ethers.Contract(
-      credentialsRegistryAddress,
-      CredentialRegistry.abi,
-      signer
-    );
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
 
-    let transaction = await contract.createCredentialToken(url);
-    let tx = await transaction.wait();
-    let event = tx.events[0];
+      let contract = new ethers.Contract(
+        credentialsRegistryAddress,
+        CredentialRegistry.abi,
+        signer
+      );
+      let transaction = await contract.createCredentialToken(url);
+      let tx = await transaction.wait();
+      let event = tx.events[0];
+      let value = event.args[2];
+      let tokenId = value.toNumber();
 
-    console.log("Success", event);
+      if (tokenId) {
+        const data = {
+          tokenId: tokenId,
+          programme: programmeId,
+          institution: providerId,
+          institutionName: providerName,
+          registrant: registrantId,
+          title: title,
+          issued_to: {
+            name: fullname,
+            email: email,
+          },
+          image: fileUrl,
+          description: description,
+        };
+        console.log(data);
+        await axios.post(`/api/credentials`, data);
+        await axios.post(`/api/mails/credentials`, data);
+        setOpen(false);
+        setTitle("");
+        setFullName("");
+        setEmail("");
+        setDescription("");
+        setSignatures([]);
+        setFinish(false);
+        setActiveStep(0);
+        setFileUrl(null);
+        setNoOfsignatures(1);
+        setSuccess(true);
+        setMessage("Credential Issued Successfully");
+        setAlert(true);
+      }
+
+      console.log("Success", event);
+    } catch (error) {
+      console.log("An error occured", error);
+    }
   }
 
   return (
     <div>
-      <Tooltip title="Issue Credential">
-        <Fab
+      <Tooltip title="Award Credential">
+        <IconButton
           onClick={handleClickOpen}
-          aria-label="Issue"
+          aria-label="Award"
           color="primary"
-          sx={{ m: 2 }}
         >
           <NoteAddIcon />
-        </Fab>
+        </IconButton>
       </Tooltip>
       <Dialog
         fullScreen
@@ -168,7 +233,7 @@ export default function CreateCredential() {
             <Grid align="center">
               <Typography variant="h6" sx={{ m: 1 }}>
                 {" "}
-                Issue Credential
+                Award Credential
               </Typography>
             </Grid>
             <Steps
@@ -229,6 +294,14 @@ export default function CreateCredential() {
           </Container>
         </DialogContent>
       </Dialog>
+      <Fragment>
+        <PopUpAlert
+          open={alert}
+          success={success}
+          message={message}
+          setOpen={setAlert}
+        />
+      </Fragment>
     </div>
   );
 }

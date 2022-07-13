@@ -1,10 +1,8 @@
 import Head from "next/head";
-import { useState, useEffect } from "react";
-import { styled, useTheme } from "@mui/material/styles";
-
+import { useState } from "react";
+import { useTheme } from "@mui/material/styles";
+import axios from "axios";
 import Box from "@mui/material/Box";
-import MuiDrawer from "@mui/material/Drawer";
-import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -21,86 +19,27 @@ import ListItemText from "@mui/material/ListItemText";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import SchoolIcon from "@mui/icons-material/School";
 import ClassIcon from "@mui/icons-material/Class";
-import MailIcon from "@mui/icons-material/Mail";
 import ArchiveIcon from "@mui/icons-material/Archive";
 
 import CreateProgramme from "../../../components/programme/CreateProgramme";
 import ProgrammeList from "../../../components/programme/ProgrammeList";
 
-const drawerWidth = 240;
+import jwt from "jsonwebtoken";
+import ProviderProfile from "../../../components/provider/ProviderProfile";
 
-const openedMixin = (theme) => ({
-  width: drawerWidth,
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: "hidden",
-});
-
-const closedMixin = (theme) => ({
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(9)} + 1px)`,
-  },
-});
-
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-  boxSizing: "border-box",
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
-  }),
-}));
+import {
+  AppBar,
+  Drawer,
+  DrawerHeader,
+} from "../../../components/util/NavDrawerOptions";
 
 const buttonsinfo = [
-  { text: "Programmes", link: "/campaigns", value: 0 },
-  { text: "Institution", link: "/contacts", value: 1 },
-  { text: "Messages", link: "/messages", value: 2 },
+  { text: "Institution Profile", link: "/campaigns", value: 0 },
+  { text: "Programmes", link: "/contacts", value: 1 },
+  { text: "Archived Items", link: "/messages", value: 2 },
 ];
 
-export default function Dashboard() {
+export default function ProviderDashboard({ provider, programmes }) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(0);
@@ -164,15 +103,15 @@ export default function Dashboard() {
               >
                 <ListItemIcon>
                   {index === 0 ? (
-                    <SchoolIcon
-                      color={index === value ? "primary" : "inherit"}
-                    />
-                  ) : index === 1 ? (
                     <AccountBalanceIcon
                       color={index === value ? "primary" : "inherit"}
                     />
+                  ) : index === 1 ? (
+                    <SchoolIcon
+                      color={index === value ? "primary" : "inherit"}
+                    />
                   ) : index === 2 ? (
-                    <ClassIcon
+                    <ArchiveIcon
                       color={index === value ? "primary" : "inherit"}
                     />
                   ) : (
@@ -186,14 +125,17 @@ export default function Dashboard() {
             ))}
           </List>
         </Drawer>
+
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
           <div hidden={value !== 0}>
-            <CreateProgramme />
-            <ProgrammeList />
+            <ProviderProfile provider={provider} />
           </div>
-          <div hidden={value !== 1}>Institution</div>
-          <div hidden={value !== 2}>Messages</div>
+          <div hidden={value !== 1}>
+            <CreateProgramme providerId={provider._id} />
+            <ProgrammeList programmes={programmes} />
+          </div>
+          <div hidden={value !== 2}>Archived Items</div>
           <div hidden={value !== 3}>Sth</div>
           <div hidden={value !== 4}>Archived</div>
         </Box>
@@ -201,3 +143,51 @@ export default function Dashboard() {
     </div>
   );
 }
+
+export const getServerSideProps = async ({ req }) => {
+  const { cookies } = req;
+  const token = cookies.vyeti_jwt;
+  const decoded_token = jwt.decode(token);
+  const account_id = decoded_token.id;
+  const verified = decoded_token.verified;
+
+  if (!verified) {
+    return {
+      redirect: {
+        destination: "/verifyaccount",
+        permanent: false,
+      },
+    };
+  }
+
+  if (decoded_token.type === "employer") {
+    return {
+      redirect: {
+        destination: "/dashboard/employer",
+        permanent: false,
+      },
+    };
+  } else if (decoded_token.type === "earner") {
+    return {
+      redirect: {
+        destination: "/dashboard/earner",
+        permanent: false,
+      },
+    };
+  } else {
+    const account = await axios.get(
+      `https://vyeti.com/api/accounts/providers/${account_id}`
+    );
+    const providerId = account.data.provider._id;
+
+    const res = await axios.get(
+      `https://vyeti.com/api/providers/${providerId}`
+    );
+    return {
+      props: {
+        provider: res.data.provider,
+        programmes: res.data.programmes,
+      },
+    };
+  }
+};

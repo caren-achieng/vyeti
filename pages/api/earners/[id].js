@@ -1,5 +1,6 @@
 import dbConnect from "../../../lib/dbConnect";
 import Earner from "../../../models/earner";
+import Credential from "../../../models/credential";
 
 export default async function handler(req, res) {
   const {
@@ -12,7 +13,13 @@ export default async function handler(req, res) {
   if (method === "GET") {
     try {
       const earner = await Earner.findById(id);
-      res.status(200).json({ earner });
+      const email = earner.email;
+      const credentials = await Credential.find({
+        "issued_to.email": email,
+      })
+        .sort("-createdAt")
+        .populate("institution", "_id institution_name");
+      res.status(200).json({ earner, credentials });
     } catch (err) {
       res.status(500).json(err);
     }

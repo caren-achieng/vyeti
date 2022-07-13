@@ -16,6 +16,8 @@ import NextButton from "../../components/util/NextButton";
 import ErrorDisplay from "../../components/util/ErrorDisplay";
 import FinishButton from "../../components/util/FinishButton";
 import SuccessDisplay from "../../components/util/SuccessDisplay";
+import PopUpAlert from "../../components/util/PopUpAlert";
+import slugify from "slugify";
 
 export default function Provider() {
   const [institutionname, setInstitutionName] = useState("");
@@ -28,6 +30,8 @@ export default function Provider() {
   const [activeStep, setActiveStep] = useState(0);
   const [next, setNext] = useState(false);
   const [finish, setFinish] = useState(false);
+  const [alert, setAlert] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState([]);
   const router = useRouter();
 
@@ -62,6 +66,7 @@ export default function Provider() {
     try {
       const data = {
         institution_name: institutionname,
+        slug: slugify(`${institutionname} `).toLowerCase(),
         contact_person: fullname,
         email: email,
         wallet: walletaddress,
@@ -71,6 +76,9 @@ export default function Provider() {
       };
       const res = await axios.post("/api/providers", data);
       if (res) {
+        await axios.post(`/api/mails/verification`, data);
+        setSuccess(true);
+        setAlert(true);
         router.push("/dashboard/provider");
       }
     } catch (err) {
@@ -145,6 +153,12 @@ export default function Provider() {
           </Container>
         </Grid>
       </Grid>
+      <PopUpAlert
+        open={alert}
+        success={success}
+        message={"Account created successfully"}
+        setOpen={setAlert}
+      />
     </div>
   );
 }

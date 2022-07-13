@@ -3,7 +3,11 @@ const { ObjectId } = mongoose.Schema.Types;
 
 const credentialSchema = new mongoose.Schema(
   {
-    token: {
+    tokenId: {
+      type: String,
+      required: true,
+    },
+    title: {
       type: String,
       required: true,
     },
@@ -11,13 +15,27 @@ const credentialSchema = new mongoose.Schema(
       type: ObjectId,
       ref: "Programme",
     },
-    sent_to: {
+    institution: {
+      type: ObjectId,
+      ref: "Provider",
+    },
+    registrant: {
+      type: ObjectId,
+      ref: "Registrant",
+    },
+    issued_to: {
+      name: {
+        type: String,
+        required: true,
+      },
+      email: {
+        type: String,
+        required: true,
+      },
+    },
+    image: {
       type: String,
-      required: [true, "Recepient email is Required"],
-      match: [
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        "Please provide a valid email",
-      ],
+      required: true,
     },
   },
   { timestamps: true }

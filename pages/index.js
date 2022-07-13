@@ -39,9 +39,9 @@ export default function Home() {
               career
             </Typography>
             <Typography variant="body1" fontWeight={300} fontSize={33} sx={{ mt: 2 }}>
-              Join millions of professionals, <br/>
-              recruiters, and employers on <br/>
-              Vyeti, where you can:
+                Join millions of professionals, <br/>
+                recruiters, and employers on <br/>
+                Vyeti, where you can:
             </Typography>
             {talkingpoints.map((points, index) => (
               <Box

@@ -8,8 +8,13 @@ export default async function handler(req, res) {
 
   if (method === "GET") {
     try {
-      const credentials = await Credential.find();
-      res.status(200).json(credentials);
+      const credentials = await Credential.find()
+        .populate(
+          "institution programme",
+          "_id institution_name programme_name"
+        )
+        .sort("-createdAt");
+      res.status(200).json({ credentials });
     } catch (err) {
       res.status(500).json(err);
     }

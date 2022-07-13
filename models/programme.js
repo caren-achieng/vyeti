@@ -17,9 +17,24 @@ const programmeSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    is_archived: {
+      type: Boolean,
+      default: false,
+    },
     provider: {
       type: ObjectId,
       ref: "Provider",
+    },
+    duration: {
+      quantity: {
+        type: Number,
+        required: [true, "Programme duration is required"],
+        min: [1, "Duration cannot be 0"],
+      },
+      measure: {
+        type: String,
+        required: [true, "Programme duration is required"],
+      },
     },
   },
   { timestamps: true }

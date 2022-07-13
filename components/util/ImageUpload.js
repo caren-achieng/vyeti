@@ -1,5 +1,4 @@
 import React from "react";
-import { useState } from "react";
 import Fab from "@mui/material/Fab";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
@@ -19,6 +18,7 @@ export default function ImageUpload({ setFileUrl, fileUrl }) {
       });
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       setFileUrl(url);
+      console.log(url);
     } catch (error) {
       console.log("Error uploading file: ", error);
     }
@@ -33,8 +33,9 @@ export default function ImageUpload({ setFileUrl, fileUrl }) {
             variant="rounded"
             src={fileUrl}
           />
-          <label htmlFor="fileInput">
-            <Tooltip title="change image file" placement="top">
+
+          <Tooltip title="change image file" placement="top">
+            <label htmlFor="file-input">
               <Fab
                 size="small"
                 color="primary"
@@ -43,13 +44,13 @@ export default function ImageUpload({ setFileUrl, fileUrl }) {
               >
                 <EditIcon />
               </Fab>
-            </Tooltip>
-          </label>
+            </label>
+          </Tooltip>
 
           <input
             type="file"
             accept="image/*"
-            id="fileInput"
+            id="file-input"
             hidden
             onChange={uploadImage}
           />

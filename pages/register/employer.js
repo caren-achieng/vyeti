@@ -16,6 +16,7 @@ import NextButton from "../../components/util/NextButton";
 import ErrorDisplay from "../../components/util/ErrorDisplay";
 import FinishButton from "../../components/util/FinishButton";
 import SuccessDisplay from "../../components/util/SuccessDisplay";
+import PopUpAlert from "../../components/util/PopUpAlert";
 
 export default function Employer() {
   const [organizationname, setOrganizationName] = useState("");
@@ -27,6 +28,8 @@ export default function Employer() {
   const [activeStep, setActiveStep] = useState(0);
   const [next, setNext] = useState(false);
   const [finish, setFinish] = useState(false);
+  const [alert, setAlert] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState([]);
   const router = useRouter();
 
@@ -69,6 +72,9 @@ export default function Employer() {
       };
       const res = await axios.post("/api/employers", data);
       if (res) {
+        await axios.post(`/api/mails/verification`, data);
+        setSuccess(true);
+        setAlert(true);
         router.push("/dashboard/employer");
       }
     } catch (err) {
@@ -141,6 +147,12 @@ export default function Employer() {
           </Container>
         </Grid>
       </Grid>
+      <PopUpAlert
+        open={alert}
+        success={success}
+        message={"Account created successfully"}
+        setOpen={setAlert}
+      />
     </div>
   );
 }

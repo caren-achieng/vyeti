@@ -45,9 +45,41 @@ const providerSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    headline: {
+      type: String,
+      required: false,
+      maxlength: [100, "Description should not exceed 500 characters"],
+    },
     description: {
       type: String,
       required: false,
+      maxlength: [500, "Description should not exceed 500 characters"],
+    },
+    slug: {
+      type: String,
+      required: true,
+    },
+    links: {
+      linkedIn: {
+        type: String,
+        required: false,
+      },
+      facebook: {
+        type: String,
+        required: false,
+      },
+      twitter: {
+        type: String,
+        required: false,
+      },
+      instagram: {
+        type: String,
+        required: false,
+      },
+      webUrl: {
+        type: String,
+        required: false,
+      },
     },
     type: {
       type: String,
@@ -67,13 +99,13 @@ const providerSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    is_verified: {
-      type: Boolean,
-      default: false,
-    },
     documents: [
       {
-        file: {
+        file_url: {
+          type: String,
+          required: false,
+        },
+        file_type: {
           type: String,
           required: false,
         },
