@@ -15,11 +15,13 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-
 import AddIcon from "@mui/icons-material/Add";
+import PopUpAlert from "../util/PopUpAlert";
 
 export default function CreateProgramme({ providerId }) {
   const [open, setOpen] = useState(false);
+  const [alert, setAlert] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState([]);
@@ -52,6 +54,8 @@ export default function CreateProgramme({ providerId }) {
       const res = await axios.post(`/api/programmes`, newProgramme);
       const programme = res.data;
       setOpen(false);
+      setSuccess(true);
+      setAlert(true);
       router.replace(router.asPath);
     } catch (err) {
       console.log(err);
@@ -133,6 +137,12 @@ export default function CreateProgramme({ providerId }) {
           <Button onClick={createProgramme}>Create</Button>
         </DialogActions>
       </Dialog>
+      <PopUpAlert
+        open={alert}
+        success={success}
+        message={"Programme created successfully"}
+        setOpen={setAlert}
+      />
     </div>
   );
 }
