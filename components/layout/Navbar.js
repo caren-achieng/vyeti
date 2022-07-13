@@ -13,8 +13,7 @@ export default function Navbar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontSize:30}}>
             VYETI
           </Typography>
-            <Button sx={{ color: "#fff" }}>Sign up</Button>
-            <Button sx={{ color: "#fff" }}>Log in</Button>
+            <Button sx={{ color: "#fff" }}>Log in with wallet</Button>
         </Toolbar>
       </AppBar>
     </Box>
